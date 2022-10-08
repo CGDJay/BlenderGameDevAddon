@@ -61,8 +61,8 @@ some of the tools are adapted/ modified versions of excisting tools form GNU lis
 https://user-images.githubusercontent.com/31065180/137642217-d51470d3-a243-438f-8c49-1e367a8972ab.mp4 
   
 # To do
-	- [ ] find optimal UI for custom collision 
-	- [ ] expose orientation and additional parameters for Custom export 
+  - [ ] find optimal UI for custom collision 
+  - [ ] expose orientation and additional parameters for Custom export 
   - [ ] exspose naming conventions for Load PBR Mat
   - [ ] Fix Unwrap tool for used outside of UV sync=True
   - [ ] restore selection type after context aware Mark UV seam
