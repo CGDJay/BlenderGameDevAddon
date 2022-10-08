@@ -58,8 +58,10 @@ some of the tools are adapted/ modified versions of excisting tools form GNU lis
 1. Click the **Code** button in the top right of the repo & click **Download ZIP** in the dropdown (Do not unpack the ZIP file)
 2. Follow this video for the rest of the simple instructions
 
-https://user-images.githubusercontent.com/31065180/137642217-d51470d3-a243-438f-8c49-1e367a8972ab.mp4 
-  
+
+https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5-bb92-868b0097ccaf.mp4
+
+
 # To do
   - [ ] find optimal UI for custom collision 
   - [ ] expose orientation and additional parameters for Custom export 
