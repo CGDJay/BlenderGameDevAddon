@@ -51,3 +51,22 @@ some of the tools are adapted/ modified versions of excisting tools form GNU lis
 
 - UV tools 
   - quickly modify UV shells with rectify and unrap on indevidual axis (WIP)
+
+
+# Installation Guide
+
+1. Click the **Code** button in the top right of the repo & click **Download ZIP** in the dropdown (Do not unpack the ZIP file)
+2. Follow this video for the rest of the simple instructions
+
+https://user-images.githubusercontent.com/31065180/137642217-d51470d3-a243-438f-8c49-1e367a8972ab.mp4 
+  
+# To do
+	- [ ] find optimal UI for custom collision 
+	- [ ] expose orientation and additional parameters for Custom export 
+  - [ ] exspose naming conventions for Load PBR Mat
+  - [ ] Fix Unwrap tool for used outside of UV sync=True
+  - [ ] restore selection type after context aware Mark UV seam
+  - [ ] add test for non manifold moss cap mesh
+  - [ ] use active selection location instead of world center for pivot to vcol operation
+  
+  
