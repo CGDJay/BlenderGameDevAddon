@@ -26,28 +26,6 @@ bl_info = {
 
 #-------------------------------------------------------
 
-# reload packages
-
-if "bpy" in locals():
-    import importlib
-    importlib.reload (QuickOps.QuickOps_pnl)
-    importlib.reload (QuickOps.QuickOps_op)
-
-    importlib.reload (CustomUV.CustomUVTools_op)
-    importlib.reload (CustomUV.CustomUVTools_pnl)
-
-
-    importlib.reload (QuickSuffix)
-    importlib.reload (MossCap.MossCap)
-    importlib.reload (PivotPainter)
-
-    importlib.reload (VCM.vcm_globals)
-    importlib.reload (VCM.vcm_helpers)
-    importlib.reload (VCM.vcm_prop)
-    importlib.reload (VCM.vcm_menus)
-    importlib.reload (VCM.vcm_Ops)
-
-
 
 from msilib.schema import Icon
 from multiprocessing import context
@@ -445,6 +423,9 @@ QuickSuffix.SuffixSix,
 QuickSuffix.SuffixSeven,
 QuickSuffix.SuffixEight,
 QuickSuffix._OT_PieMenu,
+QuickSuffix.QuickSuffix_MT_presets,
+QuickSuffix.QuickSuffix_PT_presets,
+QuickSuffix.QuickSuffix_OT_add_preset,
 
 
 #-------------------------------------------------------
@@ -570,8 +551,6 @@ def disable_Used_kmi():
         disabled_kmis.append(kmi1)
         disabled_kmis.append(kmi2)
 
-if __name__ == "main":
-    disable_Used_kmi()
 
 addon_keymaps = []
 
@@ -614,7 +593,7 @@ def register():
 
     bpy.types.Scene.ToolSettings = PointerProperty(type=Settings)
 
-    bpy.types.Scene.my_prop_grp = PointerProperty(type=QuickSuffix.QuickSuffix_Props_)
+    bpy.types.Scene.quicksuffix_prop = PointerProperty(type=QuickSuffix.QuickSuffix_Props_)
 
     bpy.types.Scene.vertex_color_master_settings = PointerProperty(type=VertexColorMasterProperties)
     
@@ -664,7 +643,6 @@ def register():
         addon_keymaps.append((km, kmi))
 
 
-
         
 #-------------------------------------------------------
 #UNREGISTER   
@@ -685,7 +663,7 @@ def unregister():
     
     del bpy.types.Scene.pivot_painter
     del bpy.types.Scene.ToolSettings
-    del bpy.types.Scene.my_prop_grp
+    del bpy.types.Scene.quicksuffix_prop
     del bpy.types.Scene.vertex_color_master_settings
     del bpy.types.Scene.MossSettings
     del bpy.types.Scene.vat_prop
@@ -714,5 +692,6 @@ def unregister():
      
 if __name__ == '__main__':
     register()
+    disable_Used_kmi()
         
         
