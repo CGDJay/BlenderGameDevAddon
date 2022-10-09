@@ -7,7 +7,7 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
 
 # Mesh Tools
 - hidden assist
-  - 3 mouse button enable in sculpt mode 
+  - 3 button mouse enable in sculpt mode 
   - auto enable default addons in blender for gamedev
 - Quick ops
   - quickly set origin point to selection
