@@ -1,8 +1,8 @@
 # BlenderGameDevAddon
 A Blender addon devised to assist in the production of game development
 
-This addon consist of multiple tools developed to streamline the game developement process 
-some of the tools are adapted/ modified versions of excisting tools from public GNU license repositories
+This addon consist of multiple tools developed to streamline the game developement process. 
+Some of the tools are adapted/ modified versions of excisting tools from public GNU license repositories
 
 
 # Mesh Tools
