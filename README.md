@@ -81,3 +81,8 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
   - [ ] use active selection location instead of world center for pivot to vcol operation
   
   
+# original scripts 
+  - collision tools : https://github.com/greisane/gret
+  - Pivot painter : https://github.com/Gvgeo/Pivot-Painter-for-Blender
+  - Vertex animation : https://github.com/JoshRBogart/unreal_tools
+  - tex plane tesselation : https://github.com/Pullusb/Tesselate_texture_plane
