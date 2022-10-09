@@ -12,7 +12,7 @@ from bpy.props import BoolProperty, IntProperty
 from bpy.types import Operator, Panel, PropertyGroup
 from mathutils import Vector
 import pyperclip
-
+from bpy.props import PointerProperty
 
 
 
@@ -331,3 +331,29 @@ class GameDev_MossCap_OP_Create(Operator):
         return {'FINISHED'}
 
 
+classes = ( 
+
+
+
+GameDev_MossCapSettings,
+GameDev_MossCap_PT_,
+GameDev_MossCap_OP_Create,
+GameDev_ClipboardMossShader,
+
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.MossSettings = PointerProperty(type=GameDev_MossCapSettings)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.MossSettings

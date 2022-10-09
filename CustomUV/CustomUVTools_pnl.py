@@ -415,3 +415,26 @@ class VIEW3D_MT_PIE_customUVTools(Menu):
         col.operator("uv.customuv_markseam")
 
         
+classes = ( 
+
+
+Tools_panel,
+VIEW3D_MT_PIE_customUVTools,
+UI_PT_texel_density_checker,
+CustomUVTools_panel,
+ColorAtlasToolsUV0_panel,
+ColorAtlasTools_panel,
+
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)

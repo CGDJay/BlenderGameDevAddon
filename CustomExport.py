@@ -1,6 +1,6 @@
 import bpy
 import os
-
+from bpy.props import PointerProperty
 
 class GameDev_Export_Prop(bpy.types.PropertyGroup):
     ExportDir: bpy.props.StringProperty(name="ExportDir",subtype='DIR_PATH')
@@ -106,3 +106,28 @@ class GameDev_Export (bpy.types.Operator):
 
 
 
+classes = ( 
+
+
+
+
+GameDev_Export_Prop,
+GameDev_CustomExportPanel,
+GameDev_Export,
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.export_Prop = bpy.props.PointerProperty(type=GameDev_Export_Prop)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.export_Prop

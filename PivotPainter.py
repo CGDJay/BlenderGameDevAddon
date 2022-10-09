@@ -33,7 +33,7 @@ from math import floor, ceil, sqrt
 from time import sleep
 import bmesh
 from .common import *
-
+from bpy.props import PointerProperty
 
 class UE4_PivotPainterProperties(PropertyGroup):															# create property group for user options
     
@@ -1090,4 +1090,30 @@ class PivotToVcol (bpy.types.Operator):
 
 
 
+classes = ( 
+
+
+UE4_PivotPainterProperties,
+VIEW3D_PT_pivot_painter_Object,																							
+PPB_OT_CreateTextures,
+PPB_OT_ShowHideExtraOptions,
+PPB_OT_ShowHideExperimentalOptions,
+PPB_OT_CreateSelectOrder,
+PivotToVcol,
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
     
+    bpy.types.Scene.pivot_painter = PointerProperty(type = UE4_PivotPainterProperties)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)  
+
+    del bpy.types.Scene.pivot_painter 

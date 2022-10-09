@@ -317,3 +317,25 @@ class QuickLattice(bpy.types.Operator):
 
       
     
+classes = ( 
+
+Quick_Origin ,
+Remove_Support ,
+cylinder_reduce ,
+Auto_Smooth ,
+Foalting_Geo ,
+Quick_Resolve ,
+QuickWarp ,
+QuickLattice ,
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)

@@ -183,3 +183,23 @@ class VertexColorMasterProperties(bpy.types.PropertyGroup):
         description="Channel blending operation.",
     )
    
+
+classes = ( 
+
+
+VertexColorMasterProperties,
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+        
+    bpy.types.Scene.vertex_color_master_settings = PointerProperty(type=VertexColorMasterProperties)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.vertex_color_master_settings

@@ -3,7 +3,7 @@ from email.policy import default
 import bpy
 from bpy import context, data, ops
 from pathlib import Path
-
+from bpy.props import PointerProperty
 
 class GameDev_LoadPBRMat_Prop(bpy.types.PropertyGroup):
     ImportDir: bpy.props.StringProperty(name="ImportDir",subtype='DIR_PATH')
@@ -157,3 +157,27 @@ class GameDev_LoadPBRMat (bpy.types.Operator):
 
 
 
+classes = ( 
+
+
+GameDev_LoadPBRMat_Prop,
+GameDev_LoadPBRMat,
+GameDev_LoadPBRMatPanel,
+
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.loadpbrmat_Prop = bpy.props.PointerProperty(type=GameDev_LoadPBRMat_Prop)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.loadpbrmat_Prop

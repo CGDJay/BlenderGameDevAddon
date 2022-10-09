@@ -23,7 +23,6 @@ bl_info = {
 }
 
 
-
 #-------------------------------------------------------
 
 
@@ -43,14 +42,11 @@ from bpy.props import (
 	StringProperty,
 	BoolProperty,
 	IntProperty,
-	IntVectorProperty,
 	FloatProperty,
 	FloatVectorProperty,
 	EnumProperty,
 	PointerProperty,
 )
-
-
 
 #-------------------------------------------------------
 
@@ -72,45 +68,55 @@ subprocess.call([python_exe, "-m", "pip", "install", "opencv-python"])
 subprocess.call([python_exe, "-m", "pip", "install", "triangle"])
 
 
-from .QuickOps.QuickOps_pnl import*  
 
-from .QuickOps.QuickOps_op import *
+#-------------------------------------------------------
 
-from . CustomUV.CustomUVTools_op import * 
-
-from . CustomUV.CustomUVTools_pnl import *
-
-from . CustomUV.utilities_uv import *
-
-from . import QuickSuffix 
-
-from .BatchImporter.BatchImportFBX import * 
-
-from .MossCap.MossCap import *
-
-from . import PivotPainter
-
-from . import TTP
-
-from . import CustomExport
-
-from . import LoadPBRTexture
-
-from . import CollisionTools
+# module registrastion method
 
 
+import importlib
 
-from .vertex_animation import *
+module_names = (
+    "QuickSuffix",
 
-from .VCM.vcm_prop import *
-from .VCM.vcm_menus import *
-from .VCM.vcm_Ops import *
+    "PivotPainter",
 
-# not used in this file
-from .VCM.vcm_globals import *
-from .VCM.vcm_helpers import *
+    "QuickOps.QuickOps_pnl",
+    "QuickOps.QuickOps_op",
+
+    "CustomUV.CustomUVTools_op",
+    "CustomUV.CustomUVTools_pnl",
 
 
+    "BatchImporter.BatchImportFBX",
+
+    "MossCap.MossCap",
+
+    "TTP",
+
+    "CustomExport",
+
+    "LoadPBRTexture",
+
+    "CollisionTools",
+
+    "vertex_animation",
+
+    "VCM.vcm_prop",
+    "VCM.vcm_menus",
+    "VCM.vcm_Ops",
+
+    
+
+)
+
+modules = []
+
+for module_name in module_names:
+    if module_name in locals():
+        modules.append(importlib.reload(locals()[module_name]))
+    else:
+        modules.append(importlib.import_module("." + module_name, package=__package__))
 
 
 #-------------------------------------------------------
@@ -141,10 +147,6 @@ def unsubscribe_mode_change():
 def load_handler(dummy):
     subscribe_mode_change()
 
-
-
-#-------------------------------------------------------
-#PROPERTYGROUP
 
 def enable_addon(addon_module_name):
 
@@ -219,8 +221,6 @@ class Settings(PropertyGroup):
     
     set_method_list = (('0','Each',''),('1','Average',''))
     set_method: EnumProperty(name="", items = set_method_list)
-
-
 
 
 #-------------------------------------------------------
@@ -338,166 +338,6 @@ classes = (
 Panel_Preferences,
 Settings ,
 
-#-------------------------------------------------------
-# Quick Ops
-
-VIEW3D_MT_PIE_QuickOps,
-Quick_Origin ,
-Remove_Support ,
-cylinder_reduce ,
-Auto_Smooth ,
-Foalting_Geo ,
-Quick_Resolve ,
-QuickWarp ,
-QuickLattice ,
-
-#-------------------------------------------------------
-# UV Tools
-
-ColorAtlasTools_panel,
-CustomUVTools_panel,
-ColorAtlasToolsUV0_panel ,
-VIEW3D_MT_PIE_customUVTools,
-
-
-
-UI_PT_texel_density_checker,
-Texel_Density_Check,
-Texel_Density_Set,
-Calculated_To_Set, 
-Preset_Set, 
-
-Tools_panel,
-
-SetIsland_Op ,
-AtlasShiftBack_Op ,
-AtlasShiftNext_Op ,
-AtlasShiftDown_Op ,
-AtlasShiftUp_Op ,
-LoadTexture,
-MaterialSetup ,
-
-UdimAtlasShiftNext_Op ,
-UdimAtlasShiftBack_Op ,
-UdimAtlasShiftDown_Op ,
-UdimAtlasShiftUp_Op ,
-UdimAtlasShiftReset_Op ,
-
-UdimAtlasShiftSnapToPoint_Op1 ,
-UdimAtlasShiftSnapToPoint_Op2 ,
-UdimAtlasShiftSnapToPoint_Op3 ,
-UdimAtlasShiftSnapToPoint_Op4 ,
-UdimAtlasShiftSnapToPoint_Op5 ,
-UdimAtlasShiftSnapToPoint_Op6 ,
-UdimAtlasShiftSnapToPoint_Op8 ,
-
-UdimAtlasShiftSnapToPoint_OpMinus1 ,
-UdimAtlasShiftSnapToPoint_OpMinus2 ,
-UdimAtlasShiftSnapToPoint_OpMinus3 ,
-UdimAtlasShiftSnapToPoint_OpMinus4 ,
-UdimAtlasShiftSnapToPoint_OpMinus5 ,
-UdimAtlasShiftSnapToPoint_OpMinus6 ,
-UdimAtlasShiftSnapToPoint_OpMinus7 ,
-UdimAtlasShiftSnapToPoint_OpMinus8,
-ClipboardShader ,
-Rectify,
-unwrap,
-Straighten,
-Mark,
-
-
-
-#-------------------------------------------------------
-# Quick suffix
-
-
-QuickSuffix.QuickSuffix_Props_,
-QuickSuffix._PT_QuickSuffix,
-QuickSuffix.VIEW3D_MT_PIE_Suffix,
-QuickSuffix.SuffixOne,
-QuickSuffix.SuffixTwo,
-QuickSuffix.SuffixThree,
-QuickSuffix.SuffixFour,
-QuickSuffix.SuffixFive,
-QuickSuffix.SuffixSix,
-QuickSuffix.SuffixSeven,
-QuickSuffix.SuffixEight,
-QuickSuffix._OT_PieMenu,
-QuickSuffix.QuickSuffix_MT_presets,
-QuickSuffix.QuickSuffix_PT_presets,
-QuickSuffix.QuickSuffix_OT_add_preset,
-
-
-#-------------------------------------------------------
-# Vertex Color Master
-
-VertexColorMasterProperties,
-vcm_MossVertexColors,
-VERTEXCOLORMASTER_OT_QuickFill,
-VERTEXCOLORMASTER_OT_Fill,
-VERTEXCOLORMASTER_OT_Invert,
-VERTEXCOLORMASTER_OT_Posterize,
-VERTEXCOLORMASTER_OT_Remap,
-VERTEXCOLORMASTER_OT_CopyChannel,
-VERTEXCOLORMASTER_OT_EditBrushSettings,
-VERTEXCOLORMASTER_OT_NormalsToColor,
-VERTEXCOLORMASTER_OT_IsolateChannel,
-VERTEXCOLORMASTER_OT_ApplyIsolatedChannel,
-VERTEXCOLORMASTER_OT_RandomizeMeshIslandColors,
-VERTEXCOLORMASTER_OT_RandomizeMeshIslandColorsPerChannel,
-VERTEXCOLORMASTER_OT_FlipBrushColors,
-VERTEXCOLORMASTER_OT_Gradient,
-VERTEXCOLORMASTER_OT_BlurChannel,
-vcm_EdgeWare,
-VERTEXCOLORMASTER_PT_MainPanel,
-VERTEXCOLORMASTER_MT_PieMain,
-
-
-BatchAssetLibrary,
-ImportButton,
-ExportButton,
-
-GameDev_MossCapSettings,
-GameDev_MossCap_PT_,
-GameDev_MossCap_OP_Create,
-GameDev_ClipboardMossShader,
-
-
-PivotPainter.UE4_PivotPainterProperties,
-PivotPainter.VIEW3D_PT_pivot_painter_Object,																							
-PivotPainter.PPB_OT_CreateTextures,
-PivotPainter.PPB_OT_ShowHideExtraOptions,
-PivotPainter.PPB_OT_ShowHideExperimentalOptions,
-PivotPainter.PPB_OT_CreateSelectOrder,
-PivotPainter.PivotToVcol,
-
-
-VAT_Properties,
-OBJECT_OT_ProcessAnimMeshes,
-VIEW3D_PT_VertexAnimation,
-
-TTP.TESS_props_group,
-TTP.TESS_OT_tesselate_plane,
-TTP.TESS_PT_tesselate_UI,
-TTP.TESS_PT_subsettings_UI,
-
-LoadPBRTexture.GameDev_LoadPBRMat_Prop,
-LoadPBRTexture.GameDev_LoadPBRMat,
-LoadPBRTexture.GameDev_LoadPBRMatPanel,
-
-
-CustomExport.GameDev_Export_Prop,
-CustomExport.GameDev_CustomExportPanel,
-CustomExport.GameDev_Export,
-
-CollisionTools.GameDev_OT_collision_assign,
-CollisionTools.GameDev_OT_collision_copy_to_linked,
-CollisionTools.GameDev_OT_collision_make,
-CollisionTools._PT_CustomCol,
-
-
-
-
  )
 
 
@@ -555,14 +395,13 @@ def disable_Used_kmi():
 addon_keymaps = []
 
 
-
-
 #-------------------------------------------------------
 #REGISTER
 
 def register():
     
-
+    for mod in modules:
+        mod.register()
 
 
     if bpy.app.version >= (2, 81, 0):
@@ -580,34 +419,14 @@ def register():
 
     for cls in classes :
         bpy.utils.register_class(cls)
-    
-    
-
-    bpy.types.Scene.loadpbrmat_Prop = bpy.props.PointerProperty(type=LoadPBRTexture.GameDev_LoadPBRMat_Prop)
-    
-    bpy.types.Scene.export_Prop = bpy.props.PointerProperty(type=CustomExport.GameDev_Export_Prop)
-
-    bpy.types.Scene.vat_prop = PointerProperty(type= VAT_Properties)
-
-    bpy.types.Scene.pivot_painter = PointerProperty(type = PivotPainter.UE4_PivotPainterProperties)
 
     bpy.types.Scene.ToolSettings = PointerProperty(type=Settings)
 
-    bpy.types.Scene.quicksuffix_prop = PointerProperty(type=QuickSuffix.QuickSuffix_Props_)
 
-    bpy.types.Scene.vertex_color_master_settings = PointerProperty(type=VertexColorMasterProperties)
-    
-    bpy.types.Scene.MossSettings = PointerProperty(type=GameDev_MossCapSettings)
-
-    bpy.types.Scene.ttp_props = PointerProperty(type=TTP.TESS_props_group)
-    
-    disable_Used_kmi()
-    
 #-------------------------------------------------------
 #KeyMaps
 
-
-
+    disable_Used_kmi()
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     if kc:
@@ -641,9 +460,7 @@ def register():
         kmi = km.keymap_items.new('vertexcolormaster.brush_colors_flip', 'X', 'PRESS')
         kmi.active = True
         addon_keymaps.append((km, kmi))
-
-
-        
+    
 #-------------------------------------------------------
 #UNREGISTER   
        
@@ -651,7 +468,8 @@ def register():
 
 def unregister():
 
-
+    for mod in modules:
+        mod.unregister()
 
     bpy.app.handlers.load_post.remove(load_handler)
 
@@ -660,16 +478,11 @@ def unregister():
     for cls in classes :
         bpy.utils.unregister_class(cls)
 
-    
-    del bpy.types.Scene.pivot_painter
+
     del bpy.types.Scene.ToolSettings
-    del bpy.types.Scene.quicksuffix_prop
-    del bpy.types.Scene.vertex_color_master_settings
-    del bpy.types.Scene.MossSettings
-    del bpy.types.Scene.vat_prop
-    del bpy.types.Scene.ttp_props
-    del bpy.types.Scene.export_Prop
-    del bpy.types.Scene.loadpbrmat_Prop
+    
+    
+    
     
 #-------------------------------------------------------
 #KeyMaps

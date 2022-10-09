@@ -26,4 +26,17 @@ class VIEW3D_MT_PIE_QuickOps(Menu):
         pie.operator("quick.lattice")
         
       
+classes = ( 
 
+VIEW3D_MT_PIE_QuickOps,
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)

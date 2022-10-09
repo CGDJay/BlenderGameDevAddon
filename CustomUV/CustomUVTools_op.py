@@ -3026,7 +3026,59 @@ class Mark(bpy.types.Operator):
                 return {'FINISHED'}
 
 
+classes = ( 
 
+
+SetIsland_Op ,
+AtlasShiftBack_Op ,
+AtlasShiftNext_Op ,
+AtlasShiftDown_Op ,
+AtlasShiftUp_Op ,
+LoadTexture,
+MaterialSetup ,
+
+UdimAtlasShiftNext_Op ,
+UdimAtlasShiftBack_Op ,
+UdimAtlasShiftDown_Op ,
+UdimAtlasShiftUp_Op ,
+UdimAtlasShiftReset_Op ,
+
+UdimAtlasShiftSnapToPoint_Op1 ,
+UdimAtlasShiftSnapToPoint_Op2 ,
+UdimAtlasShiftSnapToPoint_Op3 ,
+UdimAtlasShiftSnapToPoint_Op4 ,
+UdimAtlasShiftSnapToPoint_Op5 ,
+UdimAtlasShiftSnapToPoint_Op6 ,
+UdimAtlasShiftSnapToPoint_Op8 ,
+
+UdimAtlasShiftSnapToPoint_OpMinus1 ,
+UdimAtlasShiftSnapToPoint_OpMinus2 ,
+UdimAtlasShiftSnapToPoint_OpMinus3 ,
+UdimAtlasShiftSnapToPoint_OpMinus4 ,
+UdimAtlasShiftSnapToPoint_OpMinus5 ,
+UdimAtlasShiftSnapToPoint_OpMinus6 ,
+UdimAtlasShiftSnapToPoint_OpMinus7 ,
+UdimAtlasShiftSnapToPoint_OpMinus8,
+ClipboardShader ,
+Rectify,
+unwrap,
+Straighten,
+Mark,
+Texel_Density_Check,
+Texel_Density_Set,
+Calculated_To_Set, 
+Preset_Set, 
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
 
    
     

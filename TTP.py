@@ -37,7 +37,7 @@ import numpy as np
 import bmesh
 from mathutils import Vector, Matrix
 from time import time
-
+from bpy.props import PointerProperty
 
 ## module auto-install
 ## module_name, package_name
@@ -1007,3 +1007,26 @@ class TESS_OT_tesselate_plane(Operator):
 
         return self.execute(context)
 
+classes = ( 
+
+
+TESS_props_group,
+TESS_OT_tesselate_plane,
+TESS_PT_tesselate_UI,
+TESS_PT_subsettings_UI,
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.ttp_props = PointerProperty(type=TESS_props_group)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.ttp_props

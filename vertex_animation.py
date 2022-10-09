@@ -28,6 +28,7 @@ from bpy_extras.io_utils import ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 from .common import *
+from bpy.props import PointerProperty
 
 class VAT_Properties(bpy.types.PropertyGroup):
     
@@ -263,7 +264,26 @@ class VIEW3D_PT_VertexAnimation(bpy.types.Panel):
         row.operator("object.process_anim_meshes", icon='PLAY')
 
 
+classes = ( 
 
-if __name__ == "__main__":
-    register()
 
+VAT_Properties,
+OBJECT_OT_ProcessAnimMeshes,
+VIEW3D_PT_VertexAnimation,
+
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.vat_prop = PointerProperty(type= VAT_Properties)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.vat_prop

@@ -3,7 +3,7 @@ import bpy
 from bpy.types import Menu, AddonPreferences
 from bpy.props import StringProperty, IntProperty, BoolProperty
 from .common import *
-
+from bpy.props import PointerProperty
 
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
@@ -511,6 +511,38 @@ class _OT_PieMenu(bpy.types.Operator):
 
 
 
+classes = ( 
 
 
 
+QuickSuffix_Props_,
+_PT_QuickSuffix,
+VIEW3D_MT_PIE_Suffix,
+SuffixOne,
+SuffixTwo,
+SuffixThree,
+SuffixFour,
+SuffixFive,
+SuffixSix,
+SuffixSeven,
+SuffixEight,
+_OT_PieMenu,
+QuickSuffix_MT_presets,
+QuickSuffix_PT_presets,
+QuickSuffix_OT_add_preset,
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+    bpy.types.Scene.quicksuffix_prop = PointerProperty(type=QuickSuffix_Props_)
+
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
+        
+    del bpy.types.Scene.quicksuffix_prop

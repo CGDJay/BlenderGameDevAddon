@@ -302,3 +302,21 @@ def draw_misc_operations(context, layout, obj, settings, mode='STANDARD', pie=Fa
     row.operator('vertexcolormaster.gradient', text="Linear Gradient").circular_gradient = False
     row = col.row(align=True)
     row.operator('vertexcolormaster.gradient', text="Circular Gradient").circular_gradient = True
+
+
+classes = ( 
+
+VERTEXCOLORMASTER_PT_MainPanel,
+VERTEXCOLORMASTER_MT_PieMain,
+
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)

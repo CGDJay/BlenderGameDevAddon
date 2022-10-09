@@ -839,3 +839,22 @@ class _PT_CustomCol(bpy.types.Panel):
         row.operator('gamedev.collision_assign', text="Assign")
 
 
+classes = ( 
+
+
+
+GameDev_OT_collision_assign,
+GameDev_OT_collision_copy_to_linked,
+GameDev_OT_collision_make,
+_PT_CustomCol,
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)

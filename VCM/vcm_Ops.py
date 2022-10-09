@@ -1391,3 +1391,35 @@ class vcm_EdgeWare(bpy.types.Operator):
 
         return ret
 
+
+
+classes = ( 
+
+vcm_MossVertexColors,
+VERTEXCOLORMASTER_OT_QuickFill,
+VERTEXCOLORMASTER_OT_Fill,
+VERTEXCOLORMASTER_OT_Invert,
+VERTEXCOLORMASTER_OT_Posterize,
+VERTEXCOLORMASTER_OT_Remap,
+VERTEXCOLORMASTER_OT_CopyChannel,
+VERTEXCOLORMASTER_OT_EditBrushSettings,
+VERTEXCOLORMASTER_OT_NormalsToColor,
+VERTEXCOLORMASTER_OT_IsolateChannel,
+VERTEXCOLORMASTER_OT_ApplyIsolatedChannel,
+VERTEXCOLORMASTER_OT_RandomizeMeshIslandColors,
+VERTEXCOLORMASTER_OT_RandomizeMeshIslandColorsPerChannel,
+VERTEXCOLORMASTER_OT_FlipBrushColors,
+VERTEXCOLORMASTER_OT_Gradient,
+VERTEXCOLORMASTER_OT_BlurChannel,
+vcm_EdgeWare,
+
+)
+
+
+def register():
+    for cls in classes :
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes :
+        bpy.utils.unregister_class(cls)
