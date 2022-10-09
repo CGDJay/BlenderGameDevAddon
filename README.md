@@ -16,7 +16,7 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
   - quickly create warp (uses 3d cursor to place the warp points)
   - reduce cylinder resolution
   - quick resolve Ngon
-  - remove Subdiv support
+  - remove Subdiv support loops
 
 - Quick suffix 
   - for quickly assigning predefined suffixes to any mesh
