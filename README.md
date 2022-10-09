@@ -6,7 +6,9 @@ some of the tools are adapted/ modified versions of excisting tools form GNU lic
 
 
 # Mesh Tools
-
+- hidden assist
+  - 3 mouse button enable in sculpt mode 
+  - auto enable default addons in blender for gamedev
 - Quick ops
   - quickly set origin point to selection
   - quickly create floater meshes ( currently requires custom vert group for mesh bounds)
