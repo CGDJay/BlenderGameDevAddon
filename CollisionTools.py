@@ -4,6 +4,7 @@ from mathutils import Matrix, Vector
 import bmesh
 import bpy
 import re
+import numpy as np
 
 SMALL_NUMBER = 1e-8
 
@@ -13,6 +14,8 @@ def get_point_dist_to_line_sq(point, direction, origin):
     Assumes direction is normalized.
     """
     closest_point = origin + direction * (point - origin).dot(direction)
+
+
     return (closest_point - point).length_squared
 
 def get_range_pct(min_value, max_value, value):
@@ -21,6 +24,8 @@ def get_range_pct(min_value, max_value, value):
     divisor = max_value - min_value
     if abs(divisor) <= SMALL_NUMBER:
         return 1.0 if value >= max_value else 0.0
+
+
     return (value - min_value) / divisor
 
 
@@ -28,6 +33,8 @@ def get_range_pct(min_value, max_value, value):
 def get_dist_sq(a, b):
     """Returns the square distance between two 3D vectors."""
     x, y, z = a[0] - b[0], a[1] - b[1], a[2] - b[2]
+
+
     return x*x + y*y + z*z
 
 
@@ -38,12 +45,14 @@ def calc_best_fit_line(points):
     """
     # https://stackoverflow.com/questions/24747643/3d-linear-regression
     # https://machinelearningmastery.com/calculate-principal-component-analysis-scratch-python/
-    import numpy as np
+        
     A = np.array(points)
     M = np.mean(A.T, axis=1)  # Find mean
     C = A - M  # Center around mean
     V = np.cov(C.T)  # Calculate covariance matrix of centered matrix
     U, s, Vh = np.linalg.svd(V)  # Singular value decomposition
+
+
     return Vector(U[:,0]), Vector(M)
 
 def get_context(active_obj=None, selected_objs=None):
@@ -55,14 +64,18 @@ def get_context(active_obj=None, selected_objs=None):
         ctx['object'] = ctx['active_object'] = active_obj
         selected_objs = selected_objs if active_obj in selected_objs else list(selected_objs) + [active_obj]
         ctx['selected_objects'] = ctx['selected_editable_objects'] = selected_objs
+
     elif not active_obj and selected_objs:
         # Operate on all the objects, it isn't important which one is active
         ctx['object'] = ctx['active_object'] = next(iter(selected_objs))
         ctx['selected_objects'] = ctx['selected_editable_objects'] = [active_obj]
+
     elif active_obj and not selected_objs:
         # Operate on a single object
         ctx['object'] = ctx['active_object'] = active_obj
         ctx['selected_objects'] = ctx['selected_editable_objects'] = [active_obj]
+
+
     return ctx
 
 
@@ -71,8 +84,10 @@ def get_collection(context, name, allow_duplicate=False, clean=True):
     """Ensures that a collection with the given name exists in the scene."""
 
     # collection = bpy.data.collections.get(name)
+
     collection = None
     collections = [context.scene.collection]
+
     while collections:
         cl = collections.pop()
         if cl.name == name or allow_duplicate and re.match(rf"^{name}(?:\.\d\d\d)?$", cl.name):
@@ -83,11 +98,15 @@ def get_collection(context, name, allow_duplicate=False, clean=True):
 
     if not collection:
         collection = bpy.data.collections.new(name)
+
     elif clean:
         for obj in collection.objects[:]:
             collection.objects.unlink(obj)
+
     if name not in context.scene.collection.children:
         context.scene.collection.children.link(collection)
+
+
     return collection
 
 
@@ -120,16 +139,6 @@ class TempModifier:
 
 
 
-
-
-
-
-
-
-
-
-
-
 # make_collision TODO:
 # - Non-axis aligned boxes
 # - Symmetrize for convex isn't good
@@ -139,7 +148,9 @@ class TempModifier:
 collision_prefixes = ("UCX", "UBX", "UCP", "USP")
 
 def get_collision_objects(context, obj):
+
     pattern = r"^(?:%s)_%s_\d+$" % ('|'.join(collision_prefixes), obj.name)
+
     return [o for o in context.scene.objects if re.match(pattern, o.name)]
 
 def find_free_col_name(prefix, name):
@@ -147,8 +158,11 @@ def find_free_col_name(prefix, name):
     while True:
         col_name = f"{prefix}_{name}_{n}"
         n += 1
+
         if col_name not in bpy.context.scene.objects:
             break
+
+
     return col_name
 
 def remove_extra_data(obj):
@@ -170,6 +184,18 @@ def remove_extra_data(obj):
     while mesh.attributes.active:
         mesh.attributes.remove(mesh.attributes.active)
 
+def is_box(bm):
+    """Check if the mesh can be represented by a box collision shape."""
+
+    if len(bm.verts) != 8:
+        return False
+
+    c = sum((vert.co for vert in bm.verts), Vector()) / len(bm.verts)
+    avg_d_sq = sum(get_dist_sq(vert.co, c) for vert in bm.verts) / len(bm.verts)
+
+
+    return all(isclose(avg_d_sq, get_dist_sq(vert.co, c), abs_tol=0.0001/bpy.context.scene.unit_settings.scale_length) for vert in bm.verts) 
+
 class GameDev_OT_collision_assign(bpy.types.Operator):
     #tooltip
     """Assign selected collision meshes to the active object"""
@@ -180,15 +206,18 @@ class GameDev_OT_collision_assign(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
+
         return len(context.selected_objects) > 1 and context.object and context.mode == 'OBJECT'
 
     def execute(self, context):
         for obj in context.selected_objects[:]:
             if obj == context.active_object:
                 continue
+
             prefix = obj.name[:3]
             if prefix in collision_prefixes:
                 obj.name = find_free_col_name(prefix, context.active_object.name)
+
                 if obj.data.users == 1:
                     obj.data.name = obj.name
 
@@ -212,6 +241,8 @@ class GameDev_OT_collision_copy_to_linked(bpy.types.Operator):
         if not col_objs:
             self.report({'WARNING'}, "Active object has no collision assigned.")
             return {'CANCELLED'}
+
+
         if obj.data.users == 1:
             self.report({'WARNING'}, "Active object data has no other users.")
             return {'CANCELLED'}
@@ -235,21 +266,16 @@ class GameDev_OT_collision_copy_to_linked(bpy.types.Operator):
                     new_col_obj.show_wire = col_obj.show_wire
                     new_col_obj.display_type = col_obj.display_type
                     new_col_obj.display.show_shadows = col_obj.display.show_shadows
+
                     for collection in col_obj.users_collection:
                         collection.objects.link(new_col_obj)
 
         self.report({'INFO'}, f"Copied collision to {num_linked} other objects.")
+
+
         return {'FINISHED'}
 
-def is_box(bm):
-    """Check if the mesh can be represented by a box collision shape."""
 
-    if len(bm.verts) != 8:
-        return False
-    c = sum((vert.co for vert in bm.verts), Vector()) / len(bm.verts)
-    avg_d_sq = sum(get_dist_sq(vert.co, c) for vert in bm.verts) / len(bm.verts)
-    return all(isclose(avg_d_sq, get_dist_sq(vert.co, c), abs_tol=0.0001/bpy.context.scene.unit_settings.scale_length) for vert in bm.verts) 
-#   
 class GameDev_OT_collision_make(bpy.types.Operator):
     #tooltip
     """Generate collision for selected geometry"""
@@ -433,6 +459,8 @@ class GameDev_OT_collision_make(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         obj = context.active_object
+
+
         return obj and obj.type == 'MESH' and obj.mode in {'OBJECT', 'EDIT'}
 
     def create_col_object_from_bm(self, context, obj, bm, prefix=None):
@@ -462,6 +490,8 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
             collection.color_tag = 'COLOR_04'
         collection.objects.link(col_obj)
+
+
         return col_obj
 
     def create_split_col_object_from_bm(self, context, obj, bm, thickness, offset=0.0):
@@ -472,6 +502,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         src_bm.faces.ensure_lookup_table()
         src_bm.verts.ensure_lookup_table()
         src_bm.normal_update()
+
         for src_f in src_bm.faces:
             bm = bmesh.new()
             # Add new vertices
@@ -486,6 +517,8 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             # Add new faces
             n = len(vs1)
             bm.faces.new(vs1)
+
+
             for i in range(n):
                 j = (i + 1) % n
                 vseq = vs1[i], vs2[i], vs2[j], vs1[j]
@@ -512,6 +545,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
         if self.hollow:
             self.create_split_col_object_from_bm(context, obj, bm, self.thickness, self.offset)
+
         else:
             self.create_col_object_from_bm(context, obj, bm)
         bm.free()
@@ -520,6 +554,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
     def make_cylinder_collision(self, context, obj):
         mat = Matrix.Translation(self.location)
+
         if self.cyl_rotate:
             mat @= Matrix.Rotation(pi / self.cyl_sides, 4, 'Z')
         bm = bmesh.new()
@@ -529,11 +564,13 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             calc_uvs=False, matrix=mat)
         if self.hollow:
             self.create_split_col_object_from_bm(context, obj, bm, self.thickness, self.offset)
+
         else:
             self.create_col_object_from_bm(context, obj, bm)
         bm.free()
 
     def make_capsule_collision(self, context, obj):
+
         mat = Matrix.Translation(self.location) @ self.cap_rotation.to_matrix().to_4x4()
         bm = bmesh.new()
         bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=8,
@@ -546,6 +583,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         bm.free()
 
     def make_sphere_collision(self, context, obj):
+
         mat = Matrix.Translation(self.location)
         bm = bmesh.new()
         bmesh.ops.create_icosphere(bm, subdivisions=2, radius=self.sph_radius*0.5,
@@ -554,10 +592,12 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         bm.free()
 
     def make_convex_collision(self, context, obj):
+
         if context.mode == 'EDIT_MESH':
             bm = bmesh.from_edit_mesh(obj.data).copy()
             bm.verts.ensure_lookup_table()
             bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.select], context='VERTS')
+
         else:
             bm = bmesh.new()
             dg = context.evaluated_depsgraph_get()
@@ -568,17 +608,21 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         for edge in bm.edges:
             edge.seam = False
             edge.smooth = True
+
         bm.faces.ensure_lookup_table()
         for face in bm.faces:
             face.smooth = False
 
         # While convex_hull works only on verts, pass all the geometry so that it gets tagged
+
         geom = list(chain(bm.verts, bm.edges, bm.faces))
         result = bmesh.ops.convex_hull(bm, input=geom, use_existing_faces=True)
+
         # geom_interior: elements that ended up inside the hull rather than part of it
         # geom_unused: elements that ended up inside the hull and are are unused by other geometry
         # The two sets may intersect, so for now just delete one of them. I haven't found a case yet
         # where this leaves out unwanted geometry
+
         bmesh.ops.delete(bm, geom=result['geom_interior'], context='TAGGED_ONLY')
         bm.normal_update()
         bmesh.ops.dissolve_limit(bm, angle_limit=self.planar_angle,
@@ -625,14 +669,19 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
         if self.shape == 'CUBE':
             self.make_aabb_collision(context, obj)
+
         elif self.shape == 'CYLINDER':
             self.make_cylinder_collision(context, obj)
+
         elif self.shape == 'CAPSULE':
             self.make_capsule_collision(context, obj)
+
         elif self.shape == 'SPHERE':
             self.make_sphere_collision(context, obj)
+
         elif self.shape == 'CONVEX':
             self.make_convex_collision(context, obj)
+
         elif self.shape == 'WALL':
             self.make_wall_collision(context, obj)
 
@@ -642,8 +691,11 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         # Calculate initial properties
         try:
             self.calculate_parameters(context, context.object)
+
         except RuntimeError as e:
             self.report({'ERROR'}, str(e))
+
+
             return {'CANCELLED'}
 
         # Ideally this would execute once then show the popup dialog, doesn't seem possible
@@ -653,10 +705,12 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         if obj.mode == 'EDIT':
             bm = bmesh.from_edit_mesh(obj.data)
             vert_cos = [vert.co for vert in bm.verts if vert.select]
+
         else:
             dg = context.evaluated_depsgraph_get()
             obj_eval = obj.evaluated_get(dg)
             vert_cos = [vert.co for vert in obj_eval.data.vertices]
+
         if len(vert_cos) < 3:
             raise RuntimeError("Requires at least three vertices")
 
@@ -664,6 +718,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
         corner1 = vert_cos[0].copy()
         corner2 = vert_cos[1].copy()
+
         for co in vert_cos:
             corner1.x = min(corner1.x, co.x)
             corner1.y = min(corner1.y, co.y)
@@ -680,6 +735,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
         # Cylinder radius
         self.cyl_radius1 = self.cyl_radius2 = 0.001
+
         for co in vert_cos:
             dx = center.x - co.x
             dy = center.y - co.y
@@ -693,11 +749,14 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         # Capsule axis and radius
         radius_sq = 0.001
         depth_sq = 0.0
+
         for co in vert_cos:
             dist_to_axis_sq = get_point_dist_to_line_sq(co, axis, center)
+
             if dist_to_axis_sq > radius_sq:
                 radius_sq = dist_to_axis_sq
             dist_along_axis_sq = (co - center).project(axis).length_squared
+
             if dist_along_axis_sq > depth_sq:
                 depth_sq = dist_along_axis_sq
         self.cap_radius = sqrt(radius_sq)
@@ -707,6 +766,8 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         # Sphere radius
         self.sph_radius = max(self.aabb_depth, self.aabb_width, self.aabb_height)
 
+    
+    
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
@@ -715,9 +776,11 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         row = col.row(align=True)
         row.prop(self, 'shape')
         row.prop(self, 'wire', icon='MOD_WIREFRAME', text="")
+
         if self.shape in {'CUBE', 'CYLINDER'}:
             col.separator()
             col.prop(self, 'hollow')
+
             if self.hollow:
                 col.prop(self, 'thickness')
                 col.prop(self, 'offset')
@@ -726,6 +789,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             col.prop(self, 'aabb_width')
             col.prop(self, 'aabb_height')
             col.prop(self, 'aabb_depth')
+
         elif self.shape == 'CYLINDER':
             col.prop(self, 'cyl_rotate')
             col.prop(self, 'cyl_sides')
@@ -733,23 +797,25 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             col.prop(self, 'cyl_radius2')
             col.prop(self, 'cyl_height')
             col.prop(self, 'cyl_caps')
+
         elif self.shape == 'CAPSULE':
             col.prop(self, 'cap_radius')
             col.prop(self, 'cap_depth')
+
         elif self.shape == 'SPHERE':
             col.prop(self, 'sph_radius')
+
         elif self.shape == 'CONVEX':
             col.prop(self, 'planar_angle')
             col.prop(self, 'decimate_ratio')
             row = col.row(align=True, heading="Symmetrize")
             row.prop(self, 'use_symmetry', text="")
             row.prop(self, 'symmetry_axis', expand=True)
+
         elif self.shape == 'WALL':
             col.prop(self, 'thickness')
             col.prop(self, 'offset')
             col.prop(self, 'wall_fill_holes')
-
-
 
     
 class _PT_CustomCol(bpy.types.Panel):

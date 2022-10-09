@@ -137,8 +137,11 @@ class TESS_PT_tesselate_UI(Panel):
 
     def draw(self, context):
         layout = self.layout
+
         if context.object is None:
             layout.label(text='Select textured plane(s)')
+
+
             return
 
         layout.use_property_split = True
@@ -203,15 +206,19 @@ def debug_display_img(img, img_name, width, height, base_one=True):
         #print('x', img.shape[0], blimg.size[1], ' y', img.shape[1], blimg.size[0])
         if img.shape[0] == blimg.size[1] and img.shape[1] == blimg.size[0]:
             pass
+
         else:
             bpy.data.images.remove(blimg)
             blimg = bpy.data.images.new(img_name, width=width, height=height, alpha=True)#, float_buffer=False
+
     else:
         blimg = bpy.data.images.new(img_name, width=width, height=height, alpha=True)#, float_buffer=False
 
     start = time()
+
     if not base_one:#if image is base 255
         img = img / 255
+
     ravelled = img.ravel()
     blimg.pixels = ravelled#Loooooooong !
     print(f'pixel2img time : {time() - start} secs')
@@ -221,7 +228,10 @@ def back_to_tex_node(n):
         for link in s.links:
             if link.from_node.type == 'TEX_IMAGE':
                 return link.from_node
+
             else:
+
+                
                 return back_to_tex_node(link.from_node)
 
 #TODO : if use in an operator, make a popup with the lists of textures (or find a way to filter whats "surface")
@@ -237,14 +247,18 @@ def get_tex(o):
             nodes = o.active_material.node_tree.nodes
 
             out_nodes = [i for i in nodes if i.type == 'OUTPUT_MATERIAL' and i.inputs['Surface'].is_linked]
+
             if len(out_nodes) > 1:
                 print('multiple output node found !')
+
             if out_nodes:
                 out = out_nodes[0]
                 tex_node = back_to_tex_node(out)
+
                 if tex_node:
                     #print(tex_node)
                     print('texture found to work on :', tex_node.image)
+
     return tex_node
 
 
@@ -274,6 +288,8 @@ def uv_from_vert_first(uv_layer, v):
     for l in v.link_loops:
         uv_data = l[uv_layer]
         return uv_data.uv
+
+
     return None
 
 def get_corners(ob):
@@ -295,6 +311,8 @@ def get_corners(ob):
         ul,ur = sorted(up, key=lambda x: x[0])
         sorted_points = [bl,br,ur,ul]
         points_index = [points.index(i) for i in sorted_points]#get uv index from uv points
+
+
         return sorted_points, points_index
 
     ## more than 4 points, use bmesh to get corner points if plane is subdivided.
@@ -347,8 +365,11 @@ def get_corners(ob):
     ## method 2 (good) 
     uv_points_index = []
     for pi in points_index:
+
         for poly in me.polygons:
+
             for loop_index in poly.loop_indices:
+
                 if me.loops[loop_index].vertex_index == pi:
                     print('id vert/uv: %s -> %s' % (pi, loop_index))
                     uv_points_index.append(loop_index)
@@ -405,6 +426,7 @@ def generate_mesh(obj, res, npimg):
     bm = bmesh.new()
 
     vert_list = []
+
     for v_co in res['vertices']:
         # x = v_co[1] * shape[0] / shape[1]#old-> needed np.rot on pixel shape
         # y = (1-v_co[0])#old-> needed np.rot on pixel shape
@@ -418,8 +440,10 @@ def generate_mesh(obj, res, npimg):
     
     # Create vertices:
     if vert_list:
+
         for pt in vert_list:
             bm.verts.new([pt[0], pt[1], 0])
+
     else:
         print('no vertice to generate, (in mesh generation)')
 
@@ -433,6 +457,7 @@ def generate_mesh(obj, res, npimg):
         bm.faces.new([bm.verts[i] for i in face])
 
     edges = []
+
     for edge in bm.edges:
         edge.select = True
         edges.append(edge)
@@ -479,7 +504,10 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
     tex = get_tex(obj)
     if not tex:
         print('no texture found in nodes')
+
+
         return
+
     b_img = tex.image
 
     #b_img.pixels is a flat array of pixels, #reshape it to correct np array model (x,y,4 channel) 
@@ -551,8 +579,10 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
         t_pixmargin = time()#Dbgt
         #pixel dilatation/erode
         kernel = np.ones( ( abs(pix_margin), abs(pix_margin) ), np.uint8)
+
         if pix_margin > 0:
             alphaimg = cv2.dilate(alphaimg, kernel, iterations = 1)
+
         else:#if negative, erode
             alphaimg = cv2.erode( alphaimg, kernel, iterations = 1)
         print('pixmargin: {:.3f}s'.format(time() - t_pixmargin))#Dgbt
@@ -565,6 +595,7 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
 
     if external_only:
         contour_mode = cv2.RETR_EXTERNAL # only full shapes (no holes)
+
     else:
         #contour_mode = cv2.RETR_TREE # full hiearchy (No need)
         contour_mode = cv2.RETR_CCOMP # 2 level hierachy (shape and holes)
@@ -585,13 +616,17 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
             }
 
     print('detected contours:',  len(contours))
+
     if not len(contours):
         print('NO CONTOURS DETECTED, aborting for obj', obj.name)
+
+
         return
     
     prev_cnt_index = 0
 
     t_approxshape = time()
+
     for c, h in zip(contours, hierarchy[0]): # hierachy is a nested list
         cnt = c[:,0] # remove the upper level in nested list for coords in array [[x, y]] -> [x,y]
         np.append(cnt, cnt[0]) # close shape
@@ -601,6 +636,7 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
 
         ### contour simplification, perform approximation per contour
         #https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#contour-approximation
+
         if simplify:
             # print('len raw  cnt: ', len(cnt))#before
             cnt = cv2.approxPolyDP(cnt, simplify*cv2.arcLength(cnt,True), True)[:,0]
@@ -609,6 +645,7 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
 
         # Divide to get a 1x1 square. map between 0 and 1
         cnt = cnt.astype(float) # convert polygons pixels coordinate to float so it can be mapped between 0,1
+
         for axis in range(2):
             cnt[..., axis] /= float(alphaimg.shape[axis])
     
@@ -623,6 +660,7 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
 
         # create segment list (index of the two vertices in dic['vertices'])
         seglist = 'segments'
+
         for pt_i in range(len(cnt)-1):
             cnt_dic[seglist].append(
                 [pt_i + prev_cnt_index, pt_i + prev_cnt_index + 1] )
@@ -651,6 +689,8 @@ def tesselate(obj, contour_only=False, simplify=0.00150, pix_margin=15, min_angl
         generate_mesh(obj, cnt_dic, orig_img)
         print('meshing contour: {:.3f}s'.format(time() - t_meshing))#Dgbt
         print('Done')
+
+
         return
 
     #######
@@ -749,6 +789,8 @@ def transfer_value(Value, OldMin, OldMax, NewMin, NewMax):
     OldRange = (OldMax - OldMin)  
     NewRange = (NewMax - NewMin)  
     NewValue = (((Value - OldMin) * NewRange) / OldRange) + NewMin
+
+
     return NewValue
 
 
@@ -853,6 +895,7 @@ class TESS_OT_tesselate_plane(Operator):
         if only_four_verts_plane:
             #...that have only 4 vertices
             objlist = [o for o in bpy.context.selected_objects if o.type == 'MESH' and len(o.data.vertices) == 4]
+
         else: 
             #...that have 4 vertices or more
             objlist = [o for o in bpy.context.selected_objects if o.type == 'MESH' and len(o.data.vertices) >= 4]

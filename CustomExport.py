@@ -1,6 +1,3 @@
-
-
-
 import bpy
 import os
 
@@ -35,13 +32,6 @@ class GameDev_CustomExportPanel(bpy.types.Panel):
         
         row = layout.row()
         row.operator ("gmaedev.custom_export", icon = "EXPORT", text="Export")
-
-
-
-
-
-
-
 
 
 

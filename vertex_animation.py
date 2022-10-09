@@ -39,37 +39,47 @@ class VAT_Properties(bpy.types.PropertyGroup):
 def get_per_frame_mesh_data(context, data, objects):
     """Return a list of combined mesh data per frame"""
     meshes = []
+
     for i in frame_range(context.scene):
         context.scene.frame_set(i)
         depsgraph = context.evaluated_depsgraph_get()
         bm = bmesh.new()
+
         for ob in objects:
             eval_object = ob.evaluated_get(depsgraph)
             me = data.meshes.new_from_object(eval_object)
             me.transform(ob.matrix_world)
             bm.from_mesh(me)
             data.meshes.remove(me)
+
         me = data.meshes.new("_VAT")
         bm.to_mesh(me)
         bm.free()
         me.calc_normals()
         meshes.append(me)
+
+
     return meshes
 
 
 def create_export_mesh_object(context, data, me):
     """Return a mesh object with correct UVs"""
+
     while len(me.uv_layers) < 2:
         me.uv_layers.new()
     uv_layer = me.uv_layers[1]
     uv_layer.name = "vertex_anim"
+
     for loop in me.loops:
         uv_layer.data[loop.index].uv = (
             (loop.vertex_index + 0.5)/len(me.vertices), 128/255
         )
+
     ob = data.objects.new((bpy.context.active_object.name)+('_VAT'), (me))
     
     context.scene.collection.objects.link(ob)
+
+
     return ob
 
 
@@ -78,15 +88,20 @@ def get_vertex_data(data, meshes):
     original = meshes[0].vertices
     offsets = []
     normals = []
+
     for me in reversed(meshes):
+
         for v in me.vertices:
             offset = v.co - original[v.index].co
             x, y, z = offset
             offsets.extend((x, -y, z, 1))
             x, y, z = v.normal
             normals.extend(((x + 1) * 0.5, (-y + 1) * 0.5, (z + 1) * 0.5, 1))
+
         if not me.users:
             data.meshes.remove(me)
+
+
     return offsets, normals
 
 
@@ -165,25 +180,37 @@ class OBJECT_OT_ProcessAnimMeshes(bpy.types.Operator):
                         {'ERROR'},
                         f"Objects with {mod.type.title()} modifiers are not allowed!"
                     )
+
+
                     return {'CANCELLED'}
+
         if units.system != 'METRIC' or round(units.scale_length, 2) != 0.01:
             self.report(
                 {'ERROR'},
                 "Scene Unit must be Metric with a Unit Scale of 0.01!"
             )
-            return {'CANCELLED'}        
+
+
+            return {'CANCELLED'}    
+
         if vertex_count > 8192:
             self.report(
                 {'ERROR'},
                 f"Vertex count of {vertex_count :,}, execedes limit of 8,192!"
             )
+
+
             return {'CANCELLED'}
+
         if frame_count > 8192:
             self.report(
                 {'ERROR'},
                 f"Frame count of {frame_count :,}, execedes limit of 8,192!"
             )
+
+
             return {'CANCELLED'}
+
         meshes = get_per_frame_mesh_data(context, data, objects)
         export_mesh_data = meshes[0].copy()
         create_export_mesh_object(context, data, export_mesh_data)
@@ -212,6 +239,7 @@ class VIEW3D_PT_VertexAnimation(bpy.types.Panel):
 
         if bpy.context.preferences.addons[AddonName].preferences.bool_Enable_VAT == True:
             return True
+            
         else:
             return False
     
