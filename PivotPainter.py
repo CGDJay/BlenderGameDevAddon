@@ -32,9 +32,9 @@ from bpy.props import BoolProperty, PointerProperty, IntProperty, StringProperty
 from math import floor, ceil, sqrt
 from time import sleep
 import bmesh
-from .common import *
 from bpy.props import PointerProperty
 
+AddonName = __package__
 class UE4_PivotPainterProperties(PropertyGroup):															# create property group for user options
     
     alpha_options = [

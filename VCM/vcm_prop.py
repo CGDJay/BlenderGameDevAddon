@@ -195,8 +195,11 @@ VertexColorMasterProperties,
 def register():
     for cls in classes :
         bpy.utils.register_class(cls)
-        
+
     bpy.types.Scene.vertex_color_master_settings = PointerProperty(type=VertexColorMasterProperties)
+    
+    if bpy.app.version >= (2, 81, 0):
+        default_brush_name = 'Add'
 
 def unregister():
     for cls in classes :

@@ -18,7 +18,7 @@ import bmesh
 
 __DEBUG_MODE = False
 
-AddonName = __package__
+
 
 def check_version(major, minor, _):
     """

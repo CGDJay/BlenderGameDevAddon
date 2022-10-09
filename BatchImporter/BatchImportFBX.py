@@ -1,6 +1,5 @@
 from ast import Num
 from gettext import Catalog
-import numbers
 import os
 import re
 from pickle import OBJ
@@ -8,10 +7,19 @@ from re import X
 from tokenize import Number
 from unicodedata import name
 import bpy
-from ..common import *
+from bpy.types import PropertyGroup, Panel,Operator
 
+AddonName = __package__
 
-class BatchAssetLibrary(bpy.types.Panel):
+from bpy.props import (
+	StringProperty,
+	PointerProperty,
+    BoolProperty,
+)
+
+AddonName = __package__
+
+class BatchAssetLibrary(Panel):
     bl_label = "BatchAssetLibrary"
     bl_idname = "batchassetlibrary"
     bl_space_type= 'VIEW_3D'
@@ -32,14 +40,14 @@ class BatchAssetLibrary(bpy.types.Panel):
     def draw (self, context):
         layout = self.layout
         scene = context.scene
-        ToolSettings = scene.ToolSettings
+        Props = scene.BatchImportProps
 
         row= layout.row()
 
         row.label(text="Batch import Asset library", icon='ASSET_MANAGER')
         
         row= layout.row()
-        row.prop(ToolSettings,"DirectoryPath")
+        row.prop(Props,"DirectoryPath")
 
         row= layout.row()
 
@@ -51,7 +59,7 @@ class BatchAssetLibrary(bpy.types.Panel):
         row.operator ("object.export_button", icon = "EXPORT", text="export Into Library")
 
 
-class ImportButton(bpy.types.Operator):
+class ImportButton(Operator):
     """Tooltip"""
     bl_idname = "object.import_button"
     bl_label = "ImportButton"
@@ -60,12 +68,12 @@ class ImportButton(bpy.types.Operator):
 
     def execute(self, context):
         scene = context.scene
-        ToolSettings = scene.ToolSettings
+        Props = scene.BatchImportProps
 
         
         # put the location to the folder where the FBXs are located here in this fashion
         
-        path_to_obj_dir = os.path.join(ToolSettings.DirectoryPath)
+        path_to_obj_dir = os.path.join(Props.DirectoryPath)
 
 
         # get list of all files in directory
@@ -126,7 +134,7 @@ class ImportButton(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class ExportButton(bpy.types.Operator):
+class ExportButton(Operator):
     """Tooltip"""
     bl_idname = "object.export_button"
     bl_label = "ExportButton"
@@ -135,7 +143,7 @@ class ExportButton(bpy.types.Operator):
 
     def execute(self, context):
         scene = context.scene
-        ToolSettings = scene.ToolSettings
+        Props = scene.BatchImportProps
         # put the location to the folder where the FBXs are located here in this fashion
         # this line will only work on windows ie C:\objects
         
@@ -159,7 +167,7 @@ class ExportButton(bpy.types.Operator):
 
         for obj in objs:
             obj.select_set(True)
-            path_to_obj_dir = os.path.join(ToolSettings.DirectoryPath, obj.name+'.fbx')
+            path_to_obj_dir = os.path.join(Props.DirectoryPath, obj.name+'.fbx')
             bpy.ops.export_scene.fbx(
             filepath=path_to_obj_dir,
             use_selection=True,
@@ -175,16 +183,23 @@ class ExportButton(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class BatchImport_Prop(PropertyGroup):
+#-------------------------------------------------------
+#BATCHLIBRARYPROPERTYGROUP
+
+    DirectoryPath:StringProperty(
+    name="filepath",
+    description="Choose a directory to import StaticMesh(s)",
+    maxlen=512,
+    default=os.path.join("//"),
+    subtype='DIR_PATH')
+
+
 classes = ( 
-
-
-
+BatchImport_Prop,
 BatchAssetLibrary,
 ImportButton,
 ExportButton,
-
-
-
 
 )
 
@@ -193,6 +208,10 @@ def register():
     for cls in classes :
         bpy.utils.register_class(cls)
 
+    bpy.types.Scene.BatchImportProps = PointerProperty(type=BatchImport_Prop)
+
 def unregister():
     for cls in classes :
         bpy.utils.unregister_class(cls)
+
+    del bpy.types.Scene.BatchImportProps

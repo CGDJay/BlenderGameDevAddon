@@ -26,11 +26,13 @@ import bpy
 import bmesh
 from bpy_extras.io_utils import ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
-from bpy.types import Operator
-from .common import *
+from bpy.types import Operator, Panel, PropertyGroup
+
 from bpy.props import PointerProperty
 
-class VAT_Properties(bpy.types.PropertyGroup):
+AddonName = __package__
+
+class VAT_Properties(PropertyGroup):
     
     
     output_dir: bpy.props.StringProperty (name = "Directory", subtype='DIR_PATH'  )
@@ -144,10 +146,9 @@ def bake_vertex_data(context, data, offsets, normals, size):
     normal_texture.filepath_raw=(prop_grp.output_dir + "normal.bmp")
     normal_texture.save()
 
-        
-    
 
-class OBJECT_OT_ProcessAnimMeshes(bpy.types.Operator):
+
+class OBJECT_OT_ProcessAnimMeshes(Operator):
     """Store combined per frame vertex offsets and normals for all
     selected mesh objects into seperate image textures"""
     bl_idname = "object.process_anim_meshes"
@@ -221,10 +222,9 @@ class OBJECT_OT_ProcessAnimMeshes(bpy.types.Operator):
         
         return {'FINISHED'}
     
-
-            
+       
     
-class VIEW3D_PT_VertexAnimation(bpy.types.Panel):
+class VIEW3D_PT_VertexAnimation(Panel):
     """Creates a Panel in 3D Viewport"""
     bl_label = "Vertex Animation"
     bl_idname = "VIEW3D_PT_vertex_animation"

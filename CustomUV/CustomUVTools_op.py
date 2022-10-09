@@ -107,7 +107,7 @@ class LoadTexture(Operator):
          
 
         def execute (self, context):
-                td = bpy.context.scene.ToolSettings
+                td = bpy.context.scene.CustomUVProps
 
                 name=('16X16grid')
 
@@ -140,7 +140,7 @@ class MaterialSetup(Operator):
         bl_description = "SetupAtlasMaterial"
 
         def execute (self,context):
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace
         
                 #Making new material and assigning to active objec
                 material_basic = bpy.data.materials.new(name= 'AtlasMaterial')
@@ -368,7 +368,7 @@ class UdimAtlasShiftNext_Op(Operator):
                 return False
 
         def execute (self, context):
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
 
 
 
@@ -410,7 +410,7 @@ class UdimAtlasShiftBack_Op(Operator):
                 return False
 
         def execute (self, context):
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
 
                 obj = bpy.context.active_object
                 bm = bmesh.from_edit_mesh(obj.data)
@@ -449,7 +449,7 @@ class UdimAtlasShiftDown_Op(Operator):
                 return False
 
         def execute (self, context):
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
 
                 obj = bpy.context.active_object
                 bm = bmesh.from_edit_mesh(obj.data)
@@ -487,7 +487,7 @@ class UdimAtlasShiftUp_Op(Operator):
                 return False
 
         def execute (self, context):
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
 
                 obj = bpy.context.active_object
                 bm = bmesh.from_edit_mesh(obj.data)
@@ -614,9 +614,9 @@ class UdimAtlasShiftSnapToPoint_Op1(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
 
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
               
@@ -685,7 +685,7 @@ class UdimAtlasShiftSnapToPoint_Op2(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -752,7 +752,7 @@ class UdimAtlasShiftSnapToPoint_Op3(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -818,7 +818,7 @@ class UdimAtlasShiftSnapToPoint_Op4(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -887,7 +887,7 @@ class UdimAtlasShiftSnapToPoint_Op5(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -952,7 +952,7 @@ class UdimAtlasShiftSnapToPoint_Op6(bpy.types.Operator):
     
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1018,7 +1018,7 @@ class UdimAtlasShiftSnapToPoint_Op7(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1083,7 +1083,7 @@ class UdimAtlasShiftSnapToPoint_Op8(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1152,7 +1152,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus1(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1218,7 +1218,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus2(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1286,7 +1286,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus3(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1353,7 +1353,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus4(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1420,7 +1420,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus5(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1488,7 +1488,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus6(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1554,7 +1554,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus7(bpy.types.Operator):
 
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1619,7 +1619,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus8(bpy.types.Operator):
                 return False
         def execute(self, context):
                 objs = get_uv_editable_objects(context)
-                AtlasSpace = bpy.context.scene.ToolSettings.AtlasSpace 
+                AtlasSpace = bpy.context.scene.CustomUVProps.AtlasSpace 
                 target = Vector (self.target)* Vector(AtlasSpace)
 
 
@@ -1656,7 +1656,7 @@ class UdimAtlasShiftSnapToPoint_OpMinus8(bpy.types.Operator):
 
 
 def Calculate_TD_To_List():
-    td = bpy.context.scene.ToolSettings
+    td = bpy.context.scene.CustomUVProps
     calculated_obj_td = []
 
     #save current mode and active object
@@ -1804,7 +1804,7 @@ class Texel_Density_Check(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
         
         #save current mode and active object
         start_active_obj = bpy.context.active_object
@@ -1941,7 +1941,7 @@ class Texel_Density_Set(Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
 
         #save current mode and active object
         start_active_obj = bpy.context.active_object
@@ -2044,7 +2044,7 @@ class Calculated_To_Set(Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
         
         td.density_set = td.density
         
@@ -2060,7 +2060,7 @@ class Preset_Set(Operator):
     TDValue: StringProperty()
     
     def execute(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
         
         td.density_set = self.TDValue
         bpy.ops.tex.texel_density_set()
@@ -2616,7 +2616,7 @@ def get_padding(td):
 
 
 def unwrapmain(context, axis):
-    td = context.scene.ToolSettings
+    td = context.scene.CustomUVProps
 
 
 

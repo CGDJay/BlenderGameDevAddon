@@ -1,16 +1,16 @@
-from cgitb import text
+
 import bpy
-from bpy.types import Menu, AddonPreferences
+
 from bpy.props import StringProperty, IntProperty, BoolProperty
-from .common import *
+
 from bpy.props import PointerProperty
 
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
-from bpy.types import Panel, Menu
+from bpy.types import Panel, Menu , PropertyGroup , Operator
+AddonName = __package__
 
-
-class QuickSuffix_Props_(bpy.types.PropertyGroup):
+class QuickSuffix_Props_(PropertyGroup):
 
 
     Suffix_1 : bpy.props.StringProperty(name= "Suffix_1")
@@ -38,7 +38,7 @@ class QuickSuffix_PT_presets(PresetPanel, Panel):
     preset_add_operator = 'quick_suffix.preset_add'
 
 
-class QuickSuffix_OT_add_preset(AddPresetBase, bpy.types.Operator):
+class QuickSuffix_OT_add_preset(AddPresetBase, Operator):
     bl_idname = "quick_suffix.preset_add"
     bl_label = "Add a new preset"
     preset_menu = "QuickSuffix_MT_presets"
@@ -64,7 +64,7 @@ class QuickSuffix_OT_add_preset(AddPresetBase, bpy.types.Operator):
 
 
 
-class _PT_QuickSuffix(bpy.types.Panel):
+class _PT_QuickSuffix(Panel):
 
 
     bl_label = "Quick Suffix"
@@ -203,7 +203,7 @@ class VIEW3D_MT_PIE_Suffix(Menu):
  #############################################################
         #SuffixOne
 
-class SuffixOne(bpy.types.Operator):
+class SuffixOne(Operator):
 
     bl_idname = "suffix.one"
     bl_label = "SuffixOne"
@@ -240,7 +240,7 @@ class SuffixOne(bpy.types.Operator):
  #############################################################
         #SuffixTwo
 
-class SuffixTwo(bpy.types.Operator):
+class SuffixTwo(Operator):
 
     bl_idname = "suffix.two"
     bl_label = "SuffixTwo"
@@ -277,7 +277,7 @@ class SuffixTwo(bpy.types.Operator):
  #############################################################
         #SuffixThree
 
-class SuffixThree(bpy.types.Operator):
+class SuffixThree(Operator):
 
     bl_idname = "suffix.three"
     bl_label = "SuffixThree"
@@ -312,7 +312,7 @@ class SuffixThree(bpy.types.Operator):
  #############################################################
         #SuffixFour
 
-class SuffixFour(bpy.types.Operator):
+class SuffixFour(Operator):
 
     bl_idname = "suffix.four"
     bl_label = "SuffixFour"
@@ -348,7 +348,7 @@ class SuffixFour(bpy.types.Operator):
  #############################################################
         #SuffixFive
 
-class SuffixFive(bpy.types.Operator):
+class SuffixFive(Operator):
 
     bl_idname = "suffix.five"
     bl_label = "SuffixFive"
@@ -385,7 +385,7 @@ class SuffixFive(bpy.types.Operator):
  #############################################################
         #SuffixSix
 
-class SuffixSix(bpy.types.Operator):
+class SuffixSix(Operator):
 
     bl_idname = "suffix.six"
     bl_label = "SuffixSix"
@@ -422,7 +422,7 @@ class SuffixSix(bpy.types.Operator):
  #############################################################
         #SuffixSeven
 
-class SuffixSeven(bpy.types.Operator):
+class SuffixSeven(Operator):
 
     bl_idname = "suffix.seven"
     bl_label = "SuffixSeven"
@@ -460,7 +460,7 @@ class SuffixSeven(bpy.types.Operator):
  #############################################################
         #SuffixEight
 
-class SuffixEight(bpy.types.Operator):
+class SuffixEight(Operator):
 
     bl_idname = "suffix.eight"
     bl_label = "SuffixEight"
@@ -494,7 +494,7 @@ class SuffixEight(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class _OT_PieMenu(bpy.types.Operator):
+class _OT_PieMenu(Operator):
 
     bl_idname = "suffix.piemenu"
     bl_label = "OP_PieMenu"

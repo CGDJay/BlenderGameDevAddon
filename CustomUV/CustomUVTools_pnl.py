@@ -38,14 +38,14 @@ class ColorAtlasTools_panel(Panel):
                 return False
 
         def draw (self, context):
-                td = context.scene.ToolSettings
+                td = context.scene.CustomUVProps
 
                 layout = self.layout
                 row=layout.row()
                 row.scale_y = 4
                 
 
-                layout.prop(context.scene.ToolSettings, "AtlasSpace")
+                layout.prop(context.scene.CustomUVProps, "AtlasSpace")
 
                 self.layout.label(text="Color Atlas Tools")
                 
@@ -205,7 +205,7 @@ class UI_PT_texel_density_checker(Panel):
 
 
     def draw(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
         
         
         layout = self.layout
@@ -337,7 +337,7 @@ class VIEW3D_MT_PIE_customUVTools(Menu):
     bl_idname = "_MT_uv.customtools"
     
     def draw(self, context):
-        td = context.scene.ToolSettings
+        td = context.scene.CustomUVProps
         layout = self.layout
 
         pie = layout.menu_pie()

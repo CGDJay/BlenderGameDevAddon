@@ -13,7 +13,7 @@ from bpy.types import Operator, Panel, PropertyGroup
 from mathutils import Vector
 import pyperclip
 from bpy.props import PointerProperty
-
+AddonName = __package__
 
 
 
