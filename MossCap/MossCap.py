@@ -15,7 +15,7 @@ import pyperclip
 from bpy.props import PointerProperty
 AddonName = __package__
 
-
+AddonName=AddonName.replace('.MossCap','')
 
 # Properties
 class GameDev_MossCapSettings(PropertyGroup):

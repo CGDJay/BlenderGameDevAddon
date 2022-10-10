@@ -1,8 +1,6 @@
 import bpy
-
-import addon_utils
 import rna_keymap_ui 
-from bpy.types import  AddonPreferences, PropertyGroup, Panel, Menu
+from bpy.types import  AddonPreferences
 from bpy.props import (
 	StringProperty,
 	BoolProperty,
@@ -122,7 +120,6 @@ class Panel_Preferences(AddonPreferences):
 classes = ( 
 
 Panel_Preferences,
-
 
 )
 

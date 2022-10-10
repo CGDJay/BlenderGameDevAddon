@@ -40,6 +40,7 @@ def GetContextViewUV():
 						return override			
 	return None
 
+
 def multi_object_loop(func, *args, need_results = False, **kwargs) :
 
 	selected_obs = [ob for ob in bpy.context.selected_objects if ob.type == 'MESH']

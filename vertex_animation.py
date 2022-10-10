@@ -21,10 +21,9 @@
 
 
 
-import os
+
 import bpy
 import bmesh
-from bpy_extras.io_utils import ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator, Panel, PropertyGroup
 

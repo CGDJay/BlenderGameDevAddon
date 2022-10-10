@@ -1,16 +1,7 @@
-from ast import Num
-from gettext import Catalog
 import os
 import re
-from pickle import OBJ
-from re import X
-from tokenize import Number
-from unicodedata import name
 import bpy
 from bpy.types import PropertyGroup, Panel,Operator
-
-AddonName = __package__
-
 from bpy.props import (
 	StringProperty,
 	PointerProperty,
@@ -18,6 +9,8 @@ from bpy.props import (
 )
 
 AddonName = __package__
+
+AddonName=AddonName.replace('.BatchImporter','')
 
 class BatchAssetLibrary(Panel):
     bl_label = "BatchAssetLibrary"
@@ -30,12 +23,12 @@ class BatchAssetLibrary(Panel):
 
     @classmethod
     def poll(cls, context):
-      
-        
+
         if bpy.context.preferences.addons[AddonName].preferences.bool_Enable_BatchLibrary == True:
             return True
         else:
             return False
+
 
     def draw (self, context):
         layout = self.layout

@@ -1,9 +1,7 @@
 
-import code
-from fileinput import close
-from math import atan2, tan, sin, cos
+from math import atan2, tan, sin, cos, hypot, copysign
+
 import math
-import pip
 from bpy.types import Operator
 import bmesh
 import bpy, bmesh
@@ -17,25 +15,18 @@ from bpy.props import (
         BoolProperty,
         IntVectorProperty,
         IntProperty
-)
-     
+)  
 import os.path
+import mathutils
 from mathutils import Vector
-
-from . . common import *
 import numpy as np
 import pyperclip
 
-from math import hypot
-from collections import defaultdict
-from . import utilities_uv
-
-import math
-from math import copysign
-from mathutils import Vector
 from collections import defaultdict
 from itertools import chain
-import mathutils
+from . import utilities_uv
+
+
 
 
 # reads the shader.txt file and copies contents to clipboard
@@ -2099,13 +2090,13 @@ class Rectify(bpy.types.Operator):
 	def execute(self, context):
                 
                 if bpy.context.area.spaces.active.type == "IMAGE_EDITOR" and bpy.context.scene.tool_settings.use_uv_select_sync == False:
-                        SyncUVSelection()
+                        
                         utilities_uv.multi_object_loop(rectify, self, context)
                         bpy.context.scene.tool_settings.use_uv_select_sync = True
 
                         return {'FINISHED'}
                 else:
-                        
+                        bpy.context.scene.tool_settings.use_uv_select_sync == False
                         utilities_uv.multi_object_loop(rectify, self, context)
                         bpy.context.scene.tool_settings.use_uv_select_sync = True
 
@@ -2589,21 +2580,22 @@ class unwrap(bpy.types.Operator):
         return True
 
     def execute(self, context):
-        
+        bpy.ops.uv.unwrap(method='ANGLE_BASED', margin=0.00390625)
 
-        if bpy.context.area.spaces.active.type == "IMAGE_EDITOR" and bpy.context.scene.tool_settings.use_uv_select_sync == False:
-                SyncUVSelection()
+
+        # if bpy.context.area.spaces.active.type == "IMAGE_EDITOR" and bpy.context.scene.tool_settings.use_uv_select_sync == False:
+        #         SyncUVSelection()
                 
-                utilities_uv.multi_object_loop(unwrapmain, context, self.axis)
-                bpy.context.scene.tool_settings.use_uv_select_sync = True
-                bpy.ops.uv.pack_islands(margin=0.00390625)
+        #         utilities_uv.multi_object_loop(unwrapmain, context, self.axis)
+        #         bpy.context.scene.tool_settings.use_uv_select_sync = True
+        #         bpy.ops.uv.pack_islands(margin=0.00390625)
 
-        else:
-                bpy.context.scene.tool_settings.use_uv_select_sync = False
-                bpy.ops.uv.select_all(action='SELECT')
-                utilities_uv.multi_object_loop(unwrapmain, context, self.axis)
-                bpy.context.scene.tool_settings.use_uv_select_sync = True
-                bpy.ops.uv.pack_islands(margin=0.00390625)
+        # else:
+        #         bpy.context.scene.tool_settings.use_uv_select_sync = False
+        #         bpy.ops.uv.select_all(action='SELECT')
+        #         utilities_uv.multi_object_loop(unwrapmain, context, self.axis)
+        #         bpy.context.scene.tool_settings.use_uv_select_sync = True
+        #         bpy.ops.uv.pack_islands(margin=0.00390625)
 
 
         return {'FINISHED'}
@@ -3014,11 +3006,14 @@ class Mark(bpy.types.Operator):
         bl_options = {'REGISTER', 'UNDO'}
 
         def execute(self, context):
+                defaultselecitonMode= bpy.context.scene.tool_settings.uv_select_mode
+                print (defaultselecitonMode)
 
                 if tuple(bpy.context.scene.tool_settings.mesh_select_mode) == (False, False, True):
                         bpy.ops.mesh.mark_seam(clear=True)
                         bpy.ops.mesh.region_to_loop()
                         bpy.ops.mesh.mark_seam()
+                        bpy.context.scene.tool_settings.mesh_select_mode = (False, False, True)
 
                 if tuple(bpy.context.scene.tool_settings.mesh_select_mode) == (False, True, False):
                         bpy.ops.mesh.mark_seam()

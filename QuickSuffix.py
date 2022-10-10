@@ -13,14 +13,14 @@ AddonName = __package__
 class QuickSuffix_Props_(PropertyGroup):
 
 
-    Suffix_1 : bpy.props.StringProperty(name= "Suffix_1")
-    Suffix_2 : bpy.props.StringProperty(name= "Suffix_2")
-    Suffix_3 : bpy.props.StringProperty(name= "Suffix_3")
-    Suffix_4 : bpy.props.StringProperty(name= "Suffix_4")
-    Suffix_5 : bpy.props.StringProperty(name= "Suffix_5")
-    Suffix_6 : bpy.props.StringProperty(name= "Suffix_6")
-    Suffix_7 : bpy.props.StringProperty(name= "Suffix_7")
-    Suffix_8 : bpy.props.StringProperty(name= "Suffix_8")
+    Suffix_1 : StringProperty(name= "Suffix_1")
+    Suffix_2 : StringProperty(name= "Suffix_2")
+    Suffix_3 : StringProperty(name= "Suffix_3")
+    Suffix_4 : StringProperty(name= "Suffix_4")
+    Suffix_5 : StringProperty(name= "Suffix_5")
+    Suffix_6 : StringProperty(name= "Suffix_6")
+    Suffix_7 : StringProperty(name= "Suffix_7")
+    Suffix_8 : StringProperty(name= "Suffix_8")
 
 
 
@@ -61,6 +61,7 @@ class QuickSuffix_OT_add_preset(AddPresetBase, Operator):
 
     # Where to store the preset
     preset_subdir = "quicksuffix_prop_save"
+
 
 
 
@@ -119,8 +120,6 @@ class _PT_QuickSuffix(Panel):
         layout.prop(my_prop_grp, "Suffix_8")
         row= layout.row()
         row.operator ("suffix.piemenu", icon = "EVENT_F12", text="To open menu Press:")
-
-        
 
 
 

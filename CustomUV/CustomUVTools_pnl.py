@@ -4,12 +4,13 @@ import bpy
 from . import CustomUVTools_op
  
 
-from ..common import *
+AddonName = __package__
+
+AddonName=AddonName.replace('.CustomUV','')
 
 from bpy.types import (
-        Operator,
+        
         Panel,
-        PropertyGroup,
         Menu,
         )
         
@@ -396,8 +397,8 @@ class VIEW3D_MT_PIE_customUVTools(Menu):
         col.operator("uv.customtools_uv_unwrap")
 
         row = split.row(align=True)
-        row.operator(CustomUVTools_op.unwrap.bl_idname, text="U").axis="x"
-        row.operator(CustomUVTools_op.unwrap.bl_idname, text="V").axis="y"
+        # row.operator(CustomUVTools_op.unwrap.bl_idname, text="U").axis="x"
+        # row.operator(CustomUVTools_op.unwrap.bl_idname, text="V").axis="y"
 
         col.emboss = 'NORMAL'
 

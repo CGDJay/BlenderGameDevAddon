@@ -67,8 +67,6 @@ from bpy.props import (IntProperty,
 from bpy.types import (Operator,
                        Panel,
                        PropertyGroup,
-                       UIList,
-                       AddonPreferences,
                        )
 
 
@@ -196,8 +194,7 @@ class TESS_PT_subsettings_UI(Panel):
         layout.prop(context.scene.ttp_props, "min_angles")
 
         layout.prop(context.scene.ttp_props, "true_delaunay")
-        # layout.prop(context.scene.ttp_props, "algo_inc") # No need...
-        # Maybe add a show wire option ?
+
 
 
 def debug_display_img(img, img_name, width, height, base_one=True):

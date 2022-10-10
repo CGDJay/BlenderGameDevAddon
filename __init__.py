@@ -29,8 +29,6 @@ import os
 import subprocess
 import sys
 
-
-
 #-------------------------------------------------------
 
 # install pip and pyperclip to copy shader text
@@ -47,8 +45,6 @@ subprocess.call([python_exe, "-m", "pip", "install", "--upgrade", "pip"])
 subprocess.call([python_exe, "-m", "pip", "install", "pyperclip"])
 subprocess.call([python_exe, "-m", "pip", "install", "opencv-python"])
 subprocess.call([python_exe, "-m", "pip", "install", "triangle"])
-
-
 
 #-------------------------------------------------------
 

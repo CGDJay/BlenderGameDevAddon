@@ -104,18 +104,11 @@ class GameDev_Export (bpy.types.Operator):
 
 
 
-
-
 classes = ( 
-
-
-
 
 GameDev_Export_Prop,
 GameDev_CustomExportPanel,
 GameDev_Export,
-
-
 
 )
 

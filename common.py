@@ -14,7 +14,7 @@ import bpy
 from mathutils import Vector
 import bmesh
 
-
+AddonName = __package__
 
 __DEBUG_MODE = False
 
