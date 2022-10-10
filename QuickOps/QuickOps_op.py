@@ -33,7 +33,7 @@ class QuickWarp (bpy.types.Operator):
 
         #set up empties for To and from on the warp modifier
 
-        emptyFrom = bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location= ((bpy.context.scene.cursor.location)+mathutils.Vector((0, 0, 100))) , scale=(1, 1, 1))
+        emptyFrom = bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location= ((bpy.context.scene.cursor.location)+mathutils.Vector((0, 0, 1/ bpy.context.scene.unit_settings.scale_length))) , scale=(1, 1, 1))
 
         bpy.context.object.empty_display_size = 100
 
@@ -42,7 +42,7 @@ class QuickWarp (bpy.types.Operator):
         emptyFrom=bpy.context.active_object
 
 
-        emptyTo=bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location=((bpy.context.scene.cursor.location)-mathutils.Vector((0, 0, 100))) , scale=(1, 1, 1))
+        emptyTo=bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location=((bpy.context.scene.cursor.location)-mathutils.Vector((0, 0, 1/ bpy.context.scene.unit_settings.scale_length))) , scale=(1, 1, 1))
 
 
         bpy.context.object.empty_display_size = 1 / bpy.context.scene.unit_settings.scale_length
