@@ -45,7 +45,7 @@ class QuickWarp (bpy.types.Operator):
         emptyTo=bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location=((bpy.context.scene.cursor.location)-mathutils.Vector((0, 0, 100))) , scale=(1, 1, 1))
 
 
-        bpy.context.object.empty_display_size = 100
+        bpy.context.object.empty_display_size = 1 / bpy.context.scene.unit_settings.scale_length
 
         bpy.context.active_object.name = 'EmptyTo'
 
@@ -57,7 +57,7 @@ class QuickWarp (bpy.types.Operator):
         WARP=DeformObj.modifiers.new(name='Warp', type="WARP")
         WARP.object_from = emptyFrom
         WARP.object_to = emptyTo
-        WARP.falloff_radius = 150
+        WARP.falloff_radius = 1.5 / bpy.context.scene.unit_settings.scale_length
 
         return {'FINISHED'}
 
