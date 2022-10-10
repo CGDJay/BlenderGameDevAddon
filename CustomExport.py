@@ -1,12 +1,23 @@
 import bpy
 import os
-from bpy.props import PointerProperty
+from bpy.props import PointerProperty,EnumProperty,StringProperty,FloatVectorProperty
 
 class GameDev_Export_Prop(bpy.types.PropertyGroup):
-    ExportDir: bpy.props.StringProperty(name="ExportDir",subtype='DIR_PATH')
-    TransformOld: bpy.props.FloatVectorProperty(name="TransformOld", default=(0,0,0))
+    ExportDir: StringProperty(name="ExportDir",subtype='DIR_PATH')
+    TransformOld: FloatVectorProperty(name="TransformOld", default=(0,0,0))
     
-    
+    ForwardAxis:EnumProperty(name="ForwardAxis",description='Export Front axis',
+    items={
+    ('X', 'X', 'X Forward'),
+    ('Y', 'Y', 'Y Forward'),
+    ('Z', 'Z', 'Z Forward'),
+    },default='X')
+    UpwardAxis:EnumProperty(name="UpwardAxis",description='Export Front axis',
+    items={
+    ('X', 'X', 'X Upward'),
+    ('Y', 'Y', 'Y Upward'),
+    ('Z', 'Z', 'Z Upward'),
+    },default='Z')
     
 
 class GameDev_CustomExportPanel(bpy.types.Panel):
@@ -24,11 +35,15 @@ class GameDev_CustomExportPanel(bpy.types.Panel):
         scene = context.scene
         Prop = scene.export_Prop
 
-        # Create a simple row.
+
         layout.label(text="CustomExport")
 
         row = layout.row()
         row.prop(Prop, "ExportDir")
+
+        row = layout.row()
+        row.prop(Prop, "ForwardAxis")
+        row.prop(Prop, "UpwardAxis")
         
         row = layout.row()
         row.operator ("gmaedev.custom_export", icon = "EXPORT", text="Export")
@@ -40,7 +55,7 @@ class GameDev_Export (bpy.types.Operator):
     bl_label = "Export"
     
     def execute(self, context):
-        #place this in execute
+        
         scene = context.scene
         Export_Prop = scene.export_Prop
 
@@ -92,7 +107,7 @@ class GameDev_Export (bpy.types.Operator):
         use_mesh_edges=False, use_tspace=True, use_triangles=False,
         use_custom_props=False, add_leaf_bones=False, bake_anim=True, 
         embed_textures=False, batch_mode='OFF', use_batch_own_dir=False,
-        use_metadata=False, axis_forward='X', axis_up='-Z') 
+        use_metadata=False, axis_forward= Export_Prop.ForwardAxis, axis_up=Export_Prop.UpwardAxis) 
 
 
         #apply the original transform
