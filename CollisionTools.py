@@ -398,6 +398,12 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
     bl_label = "createubx"
     bl_options = {'REGISTER', 'UNDO'}
     
+    collection: bpy.props.StringProperty(
+        name="Collection",
+        description="Name of the collection for the collision objects",
+        default="Collision",
+    )
+
     scaleThreshhold:bpy.props.FloatProperty(
         name="Area",
         description="Bounding box width",
@@ -522,7 +528,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
             bpy.context.view_layer.objects.active = obj
             bpy.context.active_object.select_set(True)
             print (obj.name)
-            
+
         parentobj.select_set(True)
 
         for obj in bpy.context.selected_objects:
@@ -558,7 +564,12 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
                 print ("something")
                 new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
 
-            
+            if not self.collection:
+                collection = context.scene.collection
+            else:
+                collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
+                collection.color_tag = 'COLOR_04'
+            collection.objects.link(new_object)
 
 
             

@@ -21,7 +21,7 @@ import mathutils
 from mathutils import Vector
 import numpy as np
 import pyperclip
-
+from ..common import get_uv_editable_objects, check_version, get_island_info_from_bmesh
 from collections import defaultdict
 from itertools import chain
 from . import utilities_uv
