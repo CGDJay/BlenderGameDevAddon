@@ -507,19 +507,24 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         view_layer=bpy.context.view_layer
         view_layer.active_layer_collection.collection.objects.link(new_object)
         return(new_object)
+   
     def execute(self, context):
-                
+
         object=bpy.context.view_layer.objects.active
-        
-        
-        
-        
+
         parentname=self.get_parent_name(object)
         number=(0)
-        
-        
-        
+
+        bpy.ops.object.select_grouped(type='PARENT')
+        parentobj=bpy.context.view_layer.objects.active
+    
+        for obj in bpy.data.objects[parentname].children:
+            bpy.context.view_layer.objects.active = obj
+            bpy.context.active_object.select_set(True)
+            print (obj.name)
             
+        parentobj.select_set(True)
+
         for obj in bpy.context.selected_objects:
             
             object = obj
