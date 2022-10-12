@@ -1,12 +1,45 @@
+
+from multiprocessing import context
+from bpy.types import SpaceView3D
 from itertools import chain
 from math import pi, radians, sqrt, isclose
 from mathutils import Matrix, Vector
 import bmesh
 import bpy
+from bpy import data
 import re
 import numpy as np
+import gpu
+from gpu_extras.batch import batch_for_shader
 
 SMALL_NUMBER = 1e-8
+
+
+
+def drawColWire():
+    objnum=0
+    for obj in bpy.data.objects:
+        objnum=objnum+1
+        print (objnum)
+
+        if 'Collision' in obj:
+
+            mesh = obj.data
+            coords = [v.co + obj.location for v in mesh.vertices]
+            indices = [(e.vertices[0], e.vertices[1]) for e in mesh.edges]
+
+            shader = gpu.shader.from_builtin('3D_UNIFORM_COLOR')
+            batch = batch_for_shader(
+            shader, 'LINES', {"pos": coords}, indices=indices)
+
+            shader.bind()
+            shader.uniform_float("color", (0, 1, 0, 1))
+
+            batch.draw(shader)
+
+        else:
+            pass
+    return
 
 def get_point_dist_to_line_sq(point, direction, origin):
     """
@@ -42,7 +75,7 @@ def calc_best_fit_line(points):
     """
     # https://stackoverflow.com/questions/24747643/3d-linear-regression
     # https://machinelearningmastery.com/calculate-principal-component-analysis-scratch-python/
-        
+
     A = np.array(points)
     M = np.mean(A.T, axis=1)  # Find mean
     C = A - M  # Center around mean
@@ -142,10 +175,15 @@ def get_collision_objects(context, obj):
     return [o for o in context.scene.objects if re.match(pattern, o.name)]
 
 def find_free_col_name(prefix, name):
-    n = 0
+    n = 1
     while True:
-        col_name = f"{prefix}_{name}_{n}"
-        n += 1
+        if n >= 10:
+            col_name = f"{prefix}_{name}_{n}"
+            n += 1
+        else:
+
+            col_name = f"{prefix}_{name}_0{n}"
+            n += 1
 
         if col_name not in bpy.context.scene.objects:
             break
@@ -182,7 +220,7 @@ def is_box(bm):
     avg_d_sq = sum(get_dist_sq(vert.co, c) for vert in bm.verts) / len(bm.verts)
 
 
-    return all(isclose(avg_d_sq, get_dist_sq(vert.co, c), abs_tol=0.0001/bpy.context.scene.unit_settings.scale_length) for vert in bm.verts) 
+    return all(isclose(avg_d_sq, get_dist_sq(vert.co, c), abs_tol=0.0001/bpy.context.scene.unit_settings.scale_length) for vert in bm.verts)
 
 class GameDev_OT_collision_assign(bpy.types.Operator):
     #tooltip
@@ -328,6 +366,7 @@ def calculate_parameters(self, context, obj):
 
     # Sphere radius
     self.sph_radius = max(self.aabb_depth, self.aabb_width, self.aabb_height)
+
 def create_col_object_from_bm(self, context, obj, bm, prefix=None):
     if not prefix:
         # Autodetect (should detect sphere too)
@@ -345,6 +384,7 @@ def create_col_object_from_bm(self, context, obj, bm, prefix=None):
     col_obj.display.show_shadows = False
     col_obj.location=col_obj.location - obj.location
     col_obj.parent = obj
+
     # bmeshes created with from_mesh or from_object may have some UVs or customdata
     remove_extra_data(col_obj)
 
@@ -358,6 +398,7 @@ def create_col_object_from_bm(self, context, obj, bm, prefix=None):
 
 
     return col_obj
+
 def create_split_col_object_from_bm(self, context, obj, bm, thickness, offset=0.0):
     # Based on https://github.com/blender/blender-addons/blob/master/mesh_tools/split_solidify.py
     # by zmj100, updated by zeffii to BMesh
@@ -397,7 +438,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
     bl_idname = "gamedev.collision_auto_ubx"
     bl_label = "createubx"
     bl_options = {'REGISTER', 'UNDO'}
-    
+
     collection: bpy.props.StringProperty(
         name="Collection",
         description="Name of the collection for the collision objects",
@@ -411,19 +452,24 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         min=0.001,
         default= 100,
     )
-    
-    def get_mesh_area(self,object,scaleThreshhold):
-        isTooSmall = False
-        bm = bmesh.new()
-        bm.from_mesh(object.data)
-        area = sum(f.calc_area() for f in bm.faces)*bpy.context.scene.unit_settings.scale_length
-        print(area)
 
-        bm.free()
-        if area < scaleThreshhold:
-            isTooSmall = True
+    def get_mesh_area(self,object,scaleThreshhold):
+        isTooSmall = True
+        if object.type== 'MESH':
+
+            bm = bmesh.new()
+            bm.from_mesh(object.data)
+            area = sum(f.calc_area() for f in bm.faces)*bpy.context.scene.unit_settings.scale_length
+            print(area)
+
+            bm.free()
+            if area > scaleThreshhold:
+                isTooSmall = False
+
+
         return (isTooSmall)
-    
+
+
     def get_parent_name (self, object):
         if object.parent:
             name= object.name
@@ -436,12 +482,13 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
                 print("no parent object")
         else:
             name = object.name
-        
+
         return (name)
 
     def get_BoundBox(self,object):
-        oj      = object
-        verts   = [v.co for v in oj.data.vertices]
+        obj= object
+
+        verts   = [v.co for v in obj.data.vertices]
 
         points = np.asarray(verts)
         means = np.mean(points, axis=1)
@@ -483,13 +530,13 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         center = np.dot([cx, cy, cz], tvect)
 
         corners = [Vector((el[0], el[1], el[2])) for el in corners]
-        
+
         return(object_BB)
-    
+
     def create_cube(self,object_BB):
-        
+
         vertices = object_BB
-        
+
         #######    Top      Left     right     bottom    front      back
         faces=[(1,0,3,2),(4,6,7,5),(0,7,6,3),(7,0,1,5),(2,4,5,1),(4,2,3,6)]
         edges=[]
@@ -513,7 +560,8 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         view_layer=bpy.context.view_layer
         view_layer.active_layer_collection.collection.objects.link(new_object)
         return(new_object)
-   
+
+
     def execute(self, context):
 
         object=bpy.context.view_layer.objects.active
@@ -523,7 +571,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
 
         bpy.ops.object.select_grouped(type='PARENT')
         parentobj=bpy.context.view_layer.objects.active
-    
+
         for obj in bpy.data.objects[parentname].children:
             bpy.context.view_layer.objects.active = obj
             bpy.context.active_object.select_set(True)
@@ -532,51 +580,50 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         parentobj.select_set(True)
 
         for obj in bpy.context.selected_objects:
-            
-            object = obj
-            
-            if self.get_mesh_area(object,self.scaleThreshhold) == True:
-                pass
-                continue
 
-            number = number+1
-            
-            print (number)
+            if 'Collision' not in obj:
 
-            object_BB = self.get_BoundBox(object)
+                object = obj
 
-            new_object=self.create_cube(object_BB)
-            new_object.display_type = 'WIRE'
-            
+                if self.get_mesh_area(object,self.scaleThreshhold) == True:
+                    pass
+                    continue
+
+                number = number+1
+
+                print (number)
 
 
-            if number > 10:
-                new_object.name = "UBX_"+parentname+str(number)
-            else:
-                
-                new_object.name = "UBX_"+parentname+"_0"+str(number)
+                object_BB = self.get_BoundBox(object)
+
+                new_object=self.create_cube(object_BB)
+                new_object.display_type = 'WIRE'
+                new_object ['Collision'] = True
 
 
-            new_object.location=object.location
-            new_object.parent = bpy.data.objects[parentname]
+                col_name=find_free_col_name('UBX',parentname)
+                new_object.name = col_name
 
-            if new_object.parent != None:
-                print ("something")
-                new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
+                new_object.location=object.location
+                new_object.parent = bpy.data.objects[parentname]
 
-            if not self.collection:
-                collection = context.scene.collection
-            else:
-                collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
-                collection.color_tag = 'COLOR_04'
-            collection.objects.link(new_object)
+                if new_object.parent != None:
+                    print ("something")
+                    new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
+
+                if not self.collection:
+                    collection = context.scene.collection
+                else:
+                    collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
+                    collection.color_tag = 'COLOR_04'
+                collection.objects.link(new_object)
 
 
-            
 
-            
+
+
         return {'FINISHED'}
-        
+
 class GameDev_OT_collision_makeUBX(bpy.types.Operator):
     #tooltip
     """Generate collision for selected geometry"""
@@ -609,7 +656,7 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
         description="Name of the collection for the collision objects",
         default="Collision",
     )
-   
+
     wire: bpy.props.BoolProperty(
         name="Wire",
         description="How to display the collision objects in viewport",
@@ -641,7 +688,7 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
         subtype='TRANSLATION',
         size=3,
     )
-    
+
     @classmethod
     def poll(cls, context):
         obj = context.active_object
@@ -649,41 +696,149 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
 
         return obj and obj.type == 'MESH' and obj.mode in {'OBJECT', 'EDIT'}
 
-
-    def make_aabb_collision(self, context, obj):
-        v = Vector((self.aabb_depth, self.aabb_width, self.aabb_height)) * 0.5
-
-        bm = bmesh.new()
-        verts = bmesh.ops.create_cube(bm, calc_uvs=False)['verts']
-        verts[0].co = self.location.x - v.x, self.location.y - v.y, self.location.z - v.z
-        verts[1].co = self.location.x - v.x, self.location.y - v.y, self.location.z + v.z
-        verts[2].co = self.location.x - v.x, self.location.y + v.y, self.location.z - v.z
-        verts[3].co = self.location.x - v.x, self.location.y + v.y, self.location.z + v.z
-        verts[4].co = self.location.x + v.x, self.location.y - v.y, self.location.z - v.z
-        verts[5].co = self.location.x + v.x, self.location.y - v.y, self.location.z + v.z
-        verts[6].co = self.location.x + v.x, self.location.y + v.y, self.location.z - v.z
-        verts[7].co = self.location.x + v.x, self.location.y + v.y, self.location.z + v.z
-
-        if self.hollow:
-            create_split_col_object_from_bm(self,context, obj, bm, self.thickness, self.offset)
-
+    def get_parent_name (self, object):
+        if object.parent:
+            name= object.name
+            try:
+                parent = object.parent
+                name=parent.name
+                print("Parent Name:")
+                print(name)
+            except BaseException :
+                print("no parent object")
         else:
-            create_col_object_from_bm(self,context, obj, bm)
-        bm.free()
+            name = object.name
+
+        return (name)
+
+    def get_BoundBox(self,object):
+        obj = object
+
+        if obj.mode == 'EDIT':
+            print ('in edit mode')
+            bm = bmesh.from_edit_mesh(obj.data)
+            verts = [v.co for v in bm.verts if v.select]
+        else:
+
+            verts   = [v.co for v in obj.data.vertices]
+
+        points = np.asarray(verts)
+        means = np.mean(points, axis=1)
+
+        cov = np.cov(points, y = None,rowvar = 0,bias = 1)
+
+        v, vect = np.linalg.eig(cov)
+
+        tvect = np.transpose(vect)
+        points_r = np.dot(points, np.linalg.inv(tvect))
+
+        co_min = np.min(points_r, axis=0)
+        co_max = np.max(points_r, axis=0)
+
+        xmin, xmax = co_min[0], co_max[0]
+        ymin, ymax = co_min[1], co_max[1]
+        zmin, zmax = co_min[2], co_max[2]
+
+        xdif = (xmax - xmin) * 0.5
+        ydif = (ymax - ymin) * 0.5
+        zdif = (zmax - zmin) * 0.5
+
+        cx = xmin + xdif
+        cy = ymin + ydif
+        cz = zmin + zdif
+
+        corners = np.array([
+            [cx - xdif, cy - ydif, cz - zdif],
+            [cx - xdif, cy + ydif, cz - zdif],
+            [cx - xdif, cy + ydif, cz + zdif],
+            [cx - xdif, cy - ydif, cz + zdif],
+            [cx + xdif, cy + ydif, cz + zdif],
+            [cx + xdif, cy + ydif, cz - zdif],
+            [cx + xdif, cy - ydif, cz + zdif],
+            [cx + xdif, cy - ydif, cz - zdif],
+        ])
+
+        object_BB = np.dot(corners, tvect)
+        center = np.dot([cx, cy, cz], tvect)
+
+        corners = [Vector((el[0], el[1], el[2])) for el in corners]
+
+        return(object_BB)
+
+    def create_cube(self,object_BB):
+
+        vertices = object_BB
+
+        #######    Top      Left     right     bottom    front      back
+        faces=[(1,0,3,2),(4,6,7,5),(0,7,6,3),(7,0,1,5),(2,4,5,1),(4,2,3,6)]
+        edges=[]
+        # Create an empty mesh and the object.
+        mesh = bpy.data.meshes.new('Basic_Cube')
+        mesh.from_pydata(vertices,edges,faces)
+
+
+        new_object = bpy.data.objects.new("new_object",mesh)
+        bm = bmesh.new()
+        me = new_object.data
+        bm.from_mesh(me) # load bmesh
+        for f in bm.faces:
+            f.normal_flip()
+        bm.normal_update() # not sure if req'd
+        bm.to_mesh(me)
+        me.update()
+        bm.clear() #.. clear before load next
+
+
+        view_layer=bpy.context.view_layer
+        view_layer.active_layer_collection.collection.objects.link(new_object)
+        return(new_object)
 
     def execute(self, context):
-        obj = context.active_object
 
-        if obj.mode != 'EDIT':
-            # When working from object mode, it follows that there should be only one collision shape
-            pattern = re.compile(rf"^U[A-Z][A-Z]_{obj.name}_\d+")
-            for mesh in [mesh for mesh in bpy.data.meshes if pattern.match(mesh.name)]:
-                bpy.data.meshes.remove(mesh)
-        for obj in bpy.context.selected_objects:
-            calculate_parameters(self,context, context.object)
-            self.make_aabb_collision(context, obj)
+        object=bpy.context.view_layer.objects.active
 
-        
+        parentname=self.get_parent_name(object)
+        number=(0)
+
+
+        object_BB = self.get_BoundBox(object)
+
+        new_object=self.create_cube(object_BB)
+        new_object.display_type = 'WIRE'
+        new_object ['Collision'] = True
+
+        # number=number+1
+
+        # if number > 10:
+        #     new_object.name = "UBX_"+parentname+str(number)
+
+        # else:
+
+        #     new_object.name = "UBX_"+parentname+"_0"+str(number)
+
+
+        new_object.location=object.location
+        new_object.parent = bpy.data.objects[parentname]
+
+        col_name=find_free_col_name('UBX',parentname)
+        new_object.name = col_name
+
+        if new_object.parent != None:
+            print ("something")
+            new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
+
+        if not self.collection:
+            collection = context.scene.collection
+
+        else:
+            collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
+            collection.color_tag = 'COLOR_04'
+
+        collection.objects.link(new_object)
+
+
+
+
         return {'FINISHED'}
 
 class GameDev_OT_collision_makeUCX(bpy.types.Operator):
@@ -812,6 +967,7 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
         bmesh.ops.triangulate(bm, faces=bm.faces)
         col_obj = create_col_object_from_bm(self,context, obj, bm, "UCX")
         bm.free()
+        col_obj ['Collision'] = True
 
         # Decimate (no bmesh op for this currently?)
         with TempModifier(col_obj, type='DECIMATE') as dec_mod:
@@ -819,7 +975,7 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
             dec_mod.use_symmetry = self.use_symmetry
             dec_mod.symmetry_axis = self.symmetry_axis
 
-            
+
     def execute(self, context):
         obj = context.active_object
 
@@ -1192,7 +1348,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
 
         # Ideally this would execute once then show the popup dialog, doesn't seem possible
         return context.window_manager.invoke_props_dialog(self)
-   
+
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
@@ -1242,17 +1398,17 @@ class GameDev_OT_collision_make(bpy.types.Operator):
             col.prop(self, 'offset')
             col.prop(self, 'wall_fill_holes')
 
-    
+
 class _PT_CustomCol(bpy.types.Panel):
-        
+
     bl_label = "CustomCol"
     bl_idname = "_PT_CustomCol"
     bl_space_type= 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'GameDev'
     bl_options = {'DEFAULT_CLOSED'}
-    
-    def draw (self, context): 
+
+    def draw (self, context):
         layout = self.layout
 
         box = layout.box()
@@ -1274,7 +1430,7 @@ class _PT_CustomCol(bpy.types.Panel):
         row.operator('gamedev.collision_auto_ubx', text="UBX")
 
 
-classes = ( 
+classes = (
 
 GameDev_OT_collision_AutoUBX,
 GameDev_OT_collision_makeUCX,
@@ -1286,6 +1442,13 @@ _PT_CustomCol,
 
 )
 
+
+try:
+    SpaceView3D.draw_handler_remove(SpaceView3D.my_handler, 'WINDOW')
+except (AttributeError, ValueError):
+    pass
+
+SpaceView3D.my_handler = SpaceView3D.draw_handler_add(drawColWire, (), 'WINDOW', 'POST_VIEW')
 
 def register():
     for cls in classes :
