@@ -81,7 +81,7 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
   - [x] Restore selection type after context aware Mark UV seam
   - [ ] Add test for non manifold moss cap mesh
   - [ ] Use active selection location instead of world center for pivot to vcol operation
-  - [ ] Add presets to export
+  - [x] Add presets to export
   - [ ] Create Auto UCX
   - [ ] Add Collection quick suffix 
   - [x] add import image as plane operator to TPT when no object is selected
