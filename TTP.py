@@ -127,7 +127,8 @@ class TESS_PT_tesselate_UI(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "GameDev"
-    bl_context = "objectmode" # only in object mode
+    bl_context = "objectmode"
+    bl_options = {'DEFAULT_CLOSED'} # only in object mode
 
     # @classmethod
     # def poll(cls, context):
@@ -138,6 +139,8 @@ class TESS_PT_tesselate_UI(Panel):
 
         if context.object is None:
             layout.label(text='Select textured plane(s)')
+            row = layout.row()
+            row.operator("import_image.to_plane")
 
 
             return

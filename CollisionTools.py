@@ -615,7 +615,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
                 else:
                     collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
                     collection.color_tag = 'COLOR_04'
-                collection.objects.link(new_object)
+                    collection.objects.link(new_object)
 
 
 
@@ -1406,25 +1406,25 @@ class _PT_CustomCol(bpy.types.Panel):
 
     def draw (self, context):
         layout = self.layout
-        if context.active_object.mode=='OBJECT' or 'EDIT_MESH':
-            box = layout.box()
-            col = box.column(align=False)
-            col.label(text="Collision", icon='MESH_CUBE')
+        
+        box = layout.box()
+        col = box.column(align=False)
+        col.label(text="Collision", icon='MESH_CUBE')
 
-            row = col.row(align=True)
-            row.operator('gamedev.collision_make', text="Make")
-            row.operator('gamedev.collision_assign', text="Assign")
-            row = col.row(align=True)
-            row.operator('gamedev.collision_make_ubx', text="UBX")
-            row = col.row(align=True)
-            row.operator('gamedev.collision_make_ucx', text="UCX")
-        if context.active_object.mode=='OBJECT':
+        row = col.row(align=True)
+        row.operator('gamedev.collision_make', text="Make")
+        row.operator('gamedev.collision_assign', text="Assign")
+        row = col.row(align=True)
+        row.operator('gamedev.collision_make_ubx', text="UBX")
+        row = col.row(align=True)
+        row.operator('gamedev.collision_make_ucx', text="UCX")
+    
 
-            box = layout.box()
-            col = box.column(align=False)
-            col.label(text="Auto Collision", icon='MESH_CUBE')
-            row = col.row(align=True)
-            row.operator('gamedev.collision_auto_ubx', text="UBX")
+        box = layout.box()
+        col = box.column(align=False)
+        col.label(text="Auto Collision", icon='MESH_CUBE')
+        row = col.row(align=True)
+        row.operator('gamedev.collision_auto_ubx', text="UBX")
 
 
 classes = (

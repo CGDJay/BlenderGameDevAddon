@@ -60,6 +60,7 @@ module_names = (
     "QuickSuffix",
 
     "PivotPainter",
+    "vertex_animation",
 
     "QuickOps.QuickOps_pnl",
     "QuickOps.QuickOps_op",
@@ -68,24 +69,21 @@ module_names = (
     "CustomUV.CustomUVTools_op",
     "CustomUV.CustomUVTools_pnl",
 
-
-    "BatchImporter.BatchImportFBX",
-
     "MossCap.MossCap",
 
     "TTP",
 
-    "CustomExport",
-
-    "LoadPBRTexture",
-
     "CollisionTools",
-
-    "vertex_animation",
 
     "VCM.vcm_prop",
     "VCM.vcm_menus",
     "VCM.vcm_Ops",
+
+    "BatchImporter.BatchImportFBX",
+
+    "LoadPBRTexture",
+
+    "CustomExport",
 
     
 
