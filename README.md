@@ -74,13 +74,19 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
 
 
 # To do
-  - [ ] find optimal UI for custom collision 
-  - [ ] expose orientation and additional parameters for Custom export 
-  - [ ] exspose naming conventions for Load PBR Mat
+  - [ ] Find optimal UI for custom collision 
+  - [ ] Expose orientation and additional parameters for Custom export 
+  - [x] Exspose naming conventions for Load PBR Mat
   - [ ] Fix Unwrap tool for used outside of UV sync=True
-  - [ ] restore selection type after context aware Mark UV seam
-  - [ ] add test for non manifold moss cap mesh
-  - [ ] use active selection location instead of world center for pivot to vcol operation
+  - [x] Restore selection type after context aware Mark UV seam
+  - [ ] Add test for non manifold moss cap mesh
+  - [ ] Use active selection location instead of world center for pivot to vcol operation
+  - [ ] Add presets to export
+  - [ ] Create Auto UCX
+  - [ ] Add Collection quick suffix 
+  - [ ] add import image as plane operator to TPT when no object is selected
+  - [ ] update batch asset library to use the split fuction to get asset tags
+  - [ ] reduce the amount of available options on pivot painter to streamline the process
   
   
 # original scripts 
