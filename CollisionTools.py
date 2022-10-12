@@ -14,7 +14,20 @@ from gpu_extras.batch import batch_for_shader
 
 SMALL_NUMBER = 1e-8
 
+def get_parent_name (self, object):
+    if object.parent:
+        name= object.name
+        try:
+            parent = object.parent
+            name=parent.name
+            print("Parent Name:")
+            print(name)
+        except BaseException :
+            print("no parent object")
+    else:
+        name = object.name
 
+    return (name)
 
 def drawColWire():
     objnum=0
@@ -25,7 +38,7 @@ def drawColWire():
         if 'Collision' in obj:
 
             mesh = obj.data
-            coords = [v.co + obj.location for v in mesh.vertices]
+            coords = [v.co + obj.parent.location for v in mesh.vertices]
             indices = [(e.vertices[0], e.vertices[1]) for e in mesh.edges]
 
             shader = gpu.shader.from_builtin('3D_UNIFORM_COLOR')
@@ -470,20 +483,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         return (isTooSmall)
 
 
-    def get_parent_name (self, object):
-        if object.parent:
-            name= object.name
-            try:
-                parent = object.parent
-                name=parent.name
-                print("Parent Name:")
-                print(name)
-            except BaseException :
-                print("no parent object")
-        else:
-            name = object.name
 
-        return (name)
 
     def get_BoundBox(self,object):
         obj= object
@@ -565,7 +565,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
 
         object=bpy.context.view_layer.objects.active
 
-        parentname=self.get_parent_name(object)
+        parentname=get_parent_name(self,object)
         number=(0)
 
         bpy.ops.object.select_grouped(type='PARENT')
@@ -695,20 +695,7 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
 
         return obj and obj.type == 'MESH' and obj.mode in {'OBJECT', 'EDIT'}
 
-    def get_parent_name (self, object):
-        if object.parent:
-            name= object.name
-            try:
-                parent = object.parent
-                name=parent.name
-                print("Parent Name:")
-                print(name)
-            except BaseException :
-                print("no parent object")
-        else:
-            name = object.name
 
-        return (name)
 
     def get_BoundBox(self,object):
         obj = object
@@ -796,7 +783,7 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
 
         object=bpy.context.view_layer.objects.active
 
-        parentname=self.get_parent_name(object)
+        parentname=get_parent_name(self,object)
         number=(0)
 
 
@@ -966,13 +953,15 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
         bmesh.ops.triangulate(bm, faces=bm.faces)
         col_obj = create_col_object_from_bm(self,context, obj, bm, "UCX")
         bm.free()
-        col_obj ['Collision'] = True
+
 
         # Decimate (no bmesh op for this currently?)
         with TempModifier(col_obj, type='DECIMATE') as dec_mod:
             dec_mod.ratio = self.decimate_ratio
             dec_mod.use_symmetry = self.use_symmetry
             dec_mod.symmetry_axis = self.symmetry_axis
+
+        return (col_obj)
 
 
     def execute(self, context):
@@ -985,8 +974,16 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
                 bpy.data.meshes.remove(mesh)
         for obj in bpy.context.selected_objects:
             calculate_parameters(self,context, context.object)
-            self.make_convex_collision(context, obj)
+            col_obj=self.make_convex_collision(context, obj)
 
+        parentname=get_parent_name(self,obj)
+        col_obj ['Collision'] = True
+        col_obj.location=obj.location
+        col_obj.parent = bpy.data.objects[parentname]
+        col_obj ['Collision'] = True
+        if col_obj.parent != None:
+            print ("something")
+            col_obj.matrix_parent_inverse = col_obj.parent.matrix_world.inverted()
 
 
         return {'FINISHED'}
