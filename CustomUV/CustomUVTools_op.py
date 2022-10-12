@@ -2097,6 +2097,7 @@ class Rectify(bpy.types.Operator):
                         return {'FINISHED'}
                 else:
                         bpy.context.scene.tool_settings.use_uv_select_sync == False
+                        bpy.ops.uv.select_all(action='SELECT')
                         utilities_uv.multi_object_loop(rectify, self, context)
                         bpy.context.scene.tool_settings.use_uv_select_sync = True
 
