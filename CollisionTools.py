@@ -560,8 +560,7 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
         view_layer=bpy.context.view_layer
         view_layer.active_layer_collection.collection.objects.link(new_object)
         return(new_object)
-
-
+   
     def execute(self, context):
 
         object=bpy.context.view_layer.objects.active
@@ -1410,24 +1409,25 @@ class _PT_CustomCol(bpy.types.Panel):
 
     def draw (self, context):
         layout = self.layout
+        if context.active_object.mode=='OBJECT' or 'EDIT_MESH':
+            box = layout.box()
+            col = box.column(align=False)
+            col.label(text="Collision", icon='MESH_CUBE')
 
-        box = layout.box()
-        col = box.column(align=False)
-        col.label(text="Collision", icon='MESH_CUBE')
+            row = col.row(align=True)
+            row.operator('gamedev.collision_make', text="Make")
+            row.operator('gamedev.collision_assign', text="Assign")
+            row = col.row(align=True)
+            row.operator('gamedev.collision_make_ubx', text="UBX")
+            row = col.row(align=True)
+            row.operator('gamedev.collision_make_ucx', text="UCX")
+        if context.active_object.mode=='OBJECT':
 
-        row = col.row(align=True)
-        row.operator('gamedev.collision_make', text="Make")
-        row.operator('gamedev.collision_assign', text="Assign")
-        row = col.row(align=True)
-        row.operator('gamedev.collision_make_ubx', text="UBX")
-        row = col.row(align=True)
-        row.operator('gamedev.collision_make_ucx', text="UCX")
-
-        box = layout.box()
-        col = box.column(align=False)
-        col.label(text="Auto Collision", icon='MESH_CUBE')
-        row = col.row(align=True)
-        row.operator('gamedev.collision_auto_ubx', text="UBX")
+            box = layout.box()
+            col = box.column(align=False)
+            col.label(text="Auto Collision", icon='MESH_CUBE')
+            row = col.row(align=True)
+            row.operator('gamedev.collision_auto_ubx', text="UBX")
 
 
 classes = (
