@@ -84,9 +84,10 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
   - [ ] Add presets to export
   - [ ] Create Auto UCX
   - [ ] Add Collection quick suffix 
-  - [ ] add import image as plane operator to TPT when no object is selected
+  - [x] add import image as plane operator to TPT when no object is selected
   - [ ] update batch asset library to use the split fuction to get asset tags
   - [ ] reduce the amount of available options on pivot painter to streamline the process
+  - [ ] convert multiple custom UV atlas operator into single operator (reference the unwrap operator)
   
   
 # original scripts 
