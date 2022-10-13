@@ -611,7 +611,8 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
                 new_object.name = col_name
 
                 new_object.location=object.location
-                new_object.parent = bpy.data.objects[col_name]
+                
+                new_object.parent = bpy.data.objects[obj.name]
 
                 if new_object.parent != None:
                     print ("something")
@@ -788,46 +789,41 @@ class GameDev_OT_collision_makeUBX(bpy.types.Operator):
 
     def execute(self, context):
 
-        object=bpy.context.view_layer.objects.active
+        obj = context.active_object
 
-        parentname=get_parent_name(self,object)
+        parentname=get_parent_name(self,obj)
         number=(0)
 
+        if obj.mode != 'EDIT':
+            # When working from object mode, it follows that there should be only one collision shape
+            pattern = re.compile(rf"^U[A-Z][A-Z]_{obj.name}_\d+")
+            for mesh in [mesh for mesh in bpy.data.meshes if pattern.match(mesh.name)]:
+                bpy.data.meshes.remove(mesh)
+        for obj in bpy.context.selected_objects:
+            object_BB = self.get_BoundBox(obj)
 
-        object_BB = self.get_BoundBox(object)
+            new_object=self.create_cube(object_BB)
+            new_object.display_type = 'WIRE'
+            new_object ['Collision'] = True
 
-        new_object=self.create_cube(object_BB)
-        new_object.display_type = 'WIRE'
-        new_object ['Collision'] = True
+            new_object.location=obj.location
+            new_object.parent = bpy.data.objects[obj.name]
 
-        # number=number+1
+            col_name=find_free_col_name('UBX',obj.name)
+            new_object.name = col_name
 
-        # if number > 10:
-        #     new_object.name = "UBX_"+parentname+str(number)
+            if new_object.parent != None:
+                print ("something")
+                new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
 
-        # else:
+            if not self.collection:
+                collection = context.scene.collection
 
-        #     new_object.name = "UBX_"+parentname+"_0"+str(number)
+            else:
+                collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
+                collection.color_tag = 'COLOR_04'
 
-
-        new_object.location=object.location
-        new_object.parent = bpy.data.objects[parentname]
-
-        col_name=find_free_col_name('UBX',parentname)
-        new_object.name = col_name
-
-        if new_object.parent != None:
-            print ("something")
-            new_object.matrix_parent_inverse = new_object.parent.matrix_world.inverted()
-
-        if not self.collection:
-            collection = context.scene.collection
-
-        else:
-            collection = get_collection(context, self.collection, allow_duplicate=True, clean=False)
-            collection.color_tag = 'COLOR_04'
-
-        collection.objects.link(new_object)
+            collection.objects.link(new_object)
 
 
 
@@ -987,7 +983,7 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
                 parentname=get_parent_name(self,obj)
                 col_obj ['Collision'] = True
                 col_obj.location=obj.location
-                col_obj.parent = bpy.data.objects[parentname]
+                col_obj.parent = bpy.data.objects[obj.name]
                 col_obj ['Collision'] = True
                 if col_obj.parent != None:
                     print ("something")
