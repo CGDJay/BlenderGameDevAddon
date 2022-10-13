@@ -604,12 +604,14 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
                 new_object.display_type = 'WIRE'
                 new_object ['Collision'] = True
 
+                #set this to parent name if parent is not a empty
+                col_name=find_free_col_name('UBX',obj.name)
 
-                col_name=find_free_col_name('UBX',parentname)
+
                 new_object.name = col_name
 
                 new_object.location=object.location
-                new_object.parent = bpy.data.objects[parentname]
+                new_object.parent = bpy.data.objects[col_name]
 
                 if new_object.parent != None:
                     print ("something")

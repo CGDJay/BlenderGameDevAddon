@@ -134,6 +134,11 @@ class GameDev_Export (Operator):
         for obj in bpy.data.objects[objname].children:
             bpy.context.view_layer.objects.active = obj
             bpy.context.active_object.select_set(True)
+            
+            for obj in obj.children:
+                bpy.context.view_layer.objects.active = obj
+                bpy.context.active_object.select_set(True)
+
             print (obj.name)
     
             
