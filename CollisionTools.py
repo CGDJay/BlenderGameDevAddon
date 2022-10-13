@@ -30,11 +30,9 @@ def get_parent_name (self, object):
     return (name)
 
 def drawColWire():
-    objnum=0
     
     for obj in bpy.data.objects:
-        objnum=objnum+1
-        print (objnum)
+
 
         if 'Collision' in obj and obj.visible_get(view_layer=bpy.context.view_layer) == True:
             loc = obj.matrix_world.to_translation()
@@ -391,7 +389,7 @@ def create_col_object_from_bm(self, context, obj, bm, prefix=None):
     data = bpy.data.meshes.new(name)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(data)
-
+    
     col_obj = bpy.data.objects.new(name, data)
     col_obj.matrix_world = obj.matrix_world
     col_obj.show_wire = True
@@ -399,6 +397,7 @@ def create_col_object_from_bm(self, context, obj, bm, prefix=None):
     col_obj.display.show_shadows = False
     col_obj.location=col_obj.location - obj.location
     col_obj.parent = obj
+    col_obj ['Collision'] = True
 
     # bmeshes created with from_mesh or from_object may have some UVs or customdata
     remove_extra_data(col_obj)
@@ -1231,7 +1230,7 @@ class GameDev_OT_collision_make(bpy.types.Operator):
         bm.free()
 
     def make_sphere_collision(self, context, obj):
-
+        
         mat = Matrix.Translation(self.location)
         bm = bmesh.new()
         bmesh.ops.create_icosphere(bm, subdivisions=2, radius=self.sph_radius*0.5,
