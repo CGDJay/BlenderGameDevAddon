@@ -31,14 +31,16 @@ def get_parent_name (self, object):
 
 def drawColWire():
     objnum=0
+    
     for obj in bpy.data.objects:
         objnum=objnum+1
         print (objnum)
 
-        if 'Collision' in obj:
+        if 'Collision' in obj and obj.visible_get(view_layer=bpy.context.view_layer) == True:
+            loc = obj.matrix_world.to_translation()
 
             mesh = obj.data
-            coords = [v.co + obj.parent.location for v in mesh.vertices]
+            coords = [v.co + loc for v in mesh.vertices]
             indices = [(e.vertices[0], e.vertices[1]) for e in mesh.edges]
 
             shader = gpu.shader.from_builtin('3D_UNIFORM_COLOR')
@@ -575,8 +577,11 @@ class GameDev_OT_collision_AutoUBX(bpy.types.Operator):
             bpy.context.view_layer.objects.active = obj
             bpy.context.active_object.select_set(True)
             print (obj.name)
+        if parentobj.type != 'MESH':
+            pass
+        else:
 
-        parentobj.select_set(True)
+            parentobj.select_set(True)
 
         for obj in bpy.context.selected_objects:
 
@@ -973,17 +978,18 @@ class GameDev_OT_collision_makeUCX(bpy.types.Operator):
             for mesh in [mesh for mesh in bpy.data.meshes if pattern.match(mesh.name)]:
                 bpy.data.meshes.remove(mesh)
         for obj in bpy.context.selected_objects:
-            calculate_parameters(self,context, context.object)
-            col_obj=self.make_convex_collision(context, obj)
+            if obj.type=='MESH':
+                calculate_parameters(self,context, context.object)
+                col_obj=self.make_convex_collision(context, obj)
 
-        parentname=get_parent_name(self,obj)
-        col_obj ['Collision'] = True
-        col_obj.location=obj.location
-        col_obj.parent = bpy.data.objects[parentname]
-        col_obj ['Collision'] = True
-        if col_obj.parent != None:
-            print ("something")
-            col_obj.matrix_parent_inverse = col_obj.parent.matrix_world.inverted()
+                parentname=get_parent_name(self,obj)
+                col_obj ['Collision'] = True
+                col_obj.location=obj.location
+                col_obj.parent = bpy.data.objects[parentname]
+                col_obj ['Collision'] = True
+                if col_obj.parent != None:
+                    print ("something")
+                    col_obj.matrix_parent_inverse = col_obj.parent.matrix_world.inverted()
 
 
         return {'FINISHED'}
