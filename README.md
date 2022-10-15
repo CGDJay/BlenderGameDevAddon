@@ -83,17 +83,19 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
   - [x] Add presets to export
   - [x] Restore selection type after context aware Mark UV seam
   
+  # UV tools
   - [ ] Fix Unwrap tool for used outside of UV sync=True
   
+  # Moss Cap
   - [ ] Add test for non manifold moss cap mesh
-
+  # Quick Suffix
   - [ ] Add Collection quick suffix 
-  
+  # Batch Asset Librbary
   - [ ] update batch asset library to use the split fuction to get asset tags
-  
+  # Pivot Painter
   - [ ] reduce the amount of available options on pivot painter to streamline the process
   - [ ] Use active selection location instead of world center for pivot to vcol operation
-  
+  # Collision tools
   - [ ] Create Auto UCX
   - [ ] Find optimal UI for custom collision 
  
