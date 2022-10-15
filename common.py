@@ -34,7 +34,6 @@ def check_version(major, minor, _):
     return -1
 
 
-
 def get_object_select(obj):
     if check_version(2, 80, 0) < 0:
         return obj.select
@@ -86,34 +85,35 @@ def get_island_info_from_faces(bm, faces, uv_layer):
     return island_info
 
 
-# --------------------------------------------------------------
-# Unused packages preserved for potential use in future updates
+def __create_vert_face_db(faces, uv_layer):
+    # create mesh database for all faces
+    face_to_verts = defaultdict(set)
+    vert_to_faces = defaultdict(set)
+    for f in faces:
+        for l in f.loops:
+            id_ = l[uv_layer].uv.to_tuple(5), l.vert.index
+            face_to_verts[f.index].add(id_)
+            vert_to_faces[id_].add(f.index)
+
+    return (face_to_verts, vert_to_faces)
 
 
 
-def create_bmesh(obj):
-    bm = bmesh.from_edit_mesh(obj.data)
-    if check_version(2, 73, 0) >= 0:
-        bm.faces.ensure_lookup_table()
+def __get_island(bm, face_to_verts, vert_to_faces):
+    """
+    Get island list
+    """
 
-    return bm
+    uv_island_lists = []
+    faces_left = set(face_to_verts.keys())
+    while faces_left:
+        current_island = []
+        face_idx = list(faces_left)[0]
+        __parse_island(bm, face_idx, faces_left, current_island,
+                        face_to_verts, vert_to_faces)
+        uv_island_lists.append(current_island)
 
-
-def create_new_uv_map(obj, name=None):
-    uv_maps_old = {l.name for l in obj.data.uv_layers}
-    bpy.ops.mesh.uv_texture_add()
-    uv_maps_new = {l.name for l in obj.data.uv_layers}
-    diff = uv_maps_new - uv_maps_old
-
-    if not list(diff):
-        return None     # no more UV maps can not be created
-
-    # rename UV map
-    new = obj.data.uv_layers[list(diff)[0]]
-    if name:
-        new.name = name
-
-    return new
+    return uv_island_lists
 
 
 def __get_island_info(uv_layer, islands):
@@ -184,37 +184,6 @@ def __parse_island(bm, face_idx, faces_left, island,
                     faces_to_parse.append(cf)
 
 
-def __get_island(bm, face_to_verts, vert_to_faces):
-    """
-    Get island list
-    """
-
-    uv_island_lists = []
-    faces_left = set(face_to_verts.keys())
-    while faces_left:
-        current_island = []
-        face_idx = list(faces_left)[0]
-        __parse_island(bm, face_idx, faces_left, current_island,
-                       face_to_verts, vert_to_faces)
-        uv_island_lists.append(current_island)
-
-    return uv_island_lists
-
-
-def __create_vert_face_db(faces, uv_layer):
-    # create mesh database for all faces
-    face_to_verts = defaultdict(set)
-    vert_to_faces = defaultdict(set)
-    for f in faces:
-        for l in f.loops:
-            id_ = l[uv_layer].uv.to_tuple(5), l.vert.index
-            face_to_verts[f.index].add(id_)
-            vert_to_faces[id_].add(f.index)
-
-    return (face_to_verts, vert_to_faces)
-
-
-
 
 #---------------------------------------------------------------
 # Caltulate topology area
@@ -280,10 +249,6 @@ def get_faces_list(bm, method, only_selected):
         raise ValueError("Invalid method: {}".format(method))
 
     return faces_list
-
-
-
-
 
 
 def measure_all_faces_mesh_area(bm):

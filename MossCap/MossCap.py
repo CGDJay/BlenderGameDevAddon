@@ -3,9 +3,7 @@
 import math
 import os
 import random
-import time
 
-from ..common import*
 import bpy
 import bmesh
 from bpy.props import BoolProperty, IntProperty

@@ -18,18 +18,18 @@
 # <pep8 compliant>
 
 import bpy
-from bpy.types import Menu
+from bpy.types import Menu,Panel
 from bpy.props import *
-
-from ..common import *
 from .vcm_globals import *
 from .vcm_helpers import (
     get_isolated_channel_ids,
     get_layer_info,
 )
+AddonName = __package__
 
+AddonName=AddonName.replace('.VCM','')
 
-class VERTEXCOLORMASTER_PT_MainPanel(bpy.types.Panel):
+class VERTEXCOLORMASTER_PT_MainPanel(Panel):
     """Add-on for working with vertex color data"""
     bl_label = 'Vertex Color Master'
     bl_idname = 'VERTEXCOLORMASTER_PT_MainPanel'

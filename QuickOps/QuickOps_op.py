@@ -1,12 +1,10 @@
 import bpy
-from bpy.types import Menu, Operator
-import operator
-import numpy
+from bpy.types import Operator
 import mathutils
 #############################################################
         #HardsurfaceRemesh     
 
-class QuickWarp (bpy.types.Operator):
+class QuickWarp (Operator):
     
     bl_idname = "quick.warp"
     bl_label = "QuickWarp"
@@ -76,7 +74,7 @@ class QuickWarp (bpy.types.Operator):
 #############################################################
         #FloatingGeo        
 
-class Foalting_Geo (bpy.types.Operator):
+class Foalting_Geo (Operator):
     
     bl_idname = "foating.geo"
     bl_label = "FoaltingGeo" 
@@ -119,7 +117,7 @@ class Foalting_Geo (bpy.types.Operator):
 #############################################################
         #QuickOrigin
 
-class Quick_Origin(bpy.types.Operator):
+class Quick_Origin(Operator):
     
     bl_idname = "quick.origin"
     bl_label = "QuickOrigin"
@@ -143,7 +141,7 @@ class Quick_Origin(bpy.types.Operator):
 #############################################################
         #AutoSmooth
     
-class Auto_Smooth(bpy.types.Operator):
+class Auto_Smooth(Operator):
     
     bl_idname = "auto.smooth"
     bl_label = "AutoSmooth"
@@ -169,7 +167,7 @@ class Auto_Smooth(bpy.types.Operator):
 #############################################################
         #RemoveSupportLoops    
     
-class Remove_Support(bpy.types.Operator):
+class Remove_Support(Operator):
     
     bl_idname = "remove.support"
     bl_label = "RemoveSupports"
@@ -190,7 +188,7 @@ class Remove_Support(bpy.types.Operator):
 #############################################################
         #Cylinder Reduce      
 
-class cylinder_reduce(bpy.types.Operator):
+class cylinder_reduce(Operator):
     
     bl_idname = "cylinder.reduce"
     bl_label = "CylinderReduce"
@@ -222,7 +220,7 @@ class cylinder_reduce(bpy.types.Operator):
 #############################################################
         #QuickResolve     
 
-class Quick_Resolve(bpy.types.Operator):
+class Quick_Resolve(Operator):
     
     bl_idname = "quick.resolve"
     bl_label = "QuickResolve"
@@ -252,7 +250,7 @@ class Quick_Resolve(bpy.types.Operator):
 #############################################################
         #SortModifiers     
 
-class QuickLattice(bpy.types.Operator):
+class QuickLattice(Operator):
     bl_idname = "quick.lattice"
     bl_label = "QuickLattice" 
 

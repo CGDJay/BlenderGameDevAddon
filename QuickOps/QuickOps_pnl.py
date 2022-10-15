@@ -1,5 +1,5 @@
 import bpy
-from bpy.types import Menu, Operator
+from bpy.types import Menu
 
 
 class VIEW3D_MT_PIE_QuickOps(Menu):

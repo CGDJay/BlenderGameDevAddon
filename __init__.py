@@ -60,6 +60,7 @@ module_names = (
     "QuickSuffix",
 
     "PivotPainter",
+    
     "vertex_animation",
 
     "QuickOps.QuickOps_pnl",

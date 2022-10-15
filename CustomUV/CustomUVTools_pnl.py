@@ -8,8 +8,7 @@ AddonName = __package__
 
 AddonName=AddonName.replace('.CustomUV','')
 
-from bpy.types import (
-        
+from bpy.types import (       
         Panel,
         Menu,
         )
@@ -19,6 +18,7 @@ from bpy.props import (
         EnumProperty,
         BoolProperty,
         PointerProperty,
+        FloatVectorProperty,
         )
 
 
@@ -160,40 +160,40 @@ class CustomUVTools_panel(Panel):
 
                 self.layout.label(icon = "COLLAPSEMENU" , text="Posative") 
                 row.scale_y = 2
-                row.operator( "meshuv.udim_altas_shift_snap_to_point1" , text="0", icon ="COLORSET_03_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="0", icon ="COLORSET_03_VEC").target = (.5,.5)
 
                 row=layout.row() 
 
-                row.operator( "meshuv.udim_altas_shift_snap_to_point2" , text="1", icon ="COLORSET_03_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point3" , text="2", icon ="COLORSET_03_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="1", icon ="COLORSET_03_VEC").target = (1.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="2", icon ="COLORSET_03_VEC").target = (2.5,.5)
                 
                 row=layout.row()
-                row.operator( "meshuv.udim_altas_shift_snap_to_point4" , text="3", icon ="COLORSET_03_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point5" , text="4", icon ="COLORSET_03_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point6" , text="5", icon ="COLORSET_03_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="3", icon ="COLORSET_03_VEC").target = (3.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="4", icon ="COLORSET_03_VEC").target = (4.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="5", icon ="COLORSET_03_VEC").target = (5.5,.5)
                 
                 row=layout.row()
-                row.operator( "meshuv.udim_altas_shift_snap_to_point7" , text="6", icon ="COLORSET_03_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point8" , text="7", icon ="COLORSET_03_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="6", icon ="COLORSET_03_VEC").target = (6.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="7", icon ="COLORSET_03_VEC").target = (7.5,.5)
 
                 row=layout.row()
                 row=layout.row()
                 self.layout.label(icon = "COLLAPSEMENU" , text="Negative") 
                 row=layout.row()
 
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus1" , text="-1", icon ="COLORSET_01_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-1", icon ="COLORSET_01_VEC").target = (-1.5,.5)
            
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus2" , text="-2", icon ="COLORSET_01_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus3" , text="-3", icon ="COLORSET_01_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-2", icon ="COLORSET_01_VEC").target = (-2.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-3", icon ="COLORSET_01_VEC").target = (-3.5,.5)
                 
                 row=layout.row()
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus4" , text="-4", icon ="COLORSET_01_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus5" , text="-5", icon ="COLORSET_01_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus6" , text="-6", icon ="COLORSET_01_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-4", icon ="COLORSET_01_VEC").target = (-4.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-5", icon ="COLORSET_01_VEC").target = (-5.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-6", icon ="COLORSET_01_VEC").target = (-6.5,.5)
                 
                 row=layout.row()
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus7" , text="-7", icon ="COLORSET_01_VEC")
-                row.operator( "meshuv.udim_altas_shift_snap_to_point_minus8" , text="-8", icon ="COLORSET_01_VEC")
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-7", icon ="COLORSET_01_VEC").target = (-7.5,.5)
+                row.operator( "meshuv.udim_altas_shift_snap_to_point" , text="-8", icon ="COLORSET_01_VEC").target = (-8.5,.5)
 
 
 

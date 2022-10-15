@@ -19,6 +19,7 @@
 
 import bpy
 import math
+from bpy.types import Operator
 from bpy.props import *
 from .vcm_globals import *
 from .vcm_helpers import *
@@ -61,7 +62,7 @@ def draw_gradient_callback(self, context, line_params, line_shader, circle_shade
 
 # This function from a script by Bartosz Styperek with modifications by me
 # Circular gradient based on code submitted by RylauChelmi
-class VERTEXCOLORMASTER_OT_Gradient(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_Gradient(Operator):
     """Draw a line with the mouse to paint a vertex color gradient"""
     bl_idname = "vertexcolormaster.gradient"
     bl_label = "VCM Gradient Tool"
@@ -303,7 +304,7 @@ class VERTEXCOLORMASTER_OT_Gradient(bpy.types.Operator):
 
 
 # Partly based on code by Bartosz Styperek
-class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColors(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColors(Operator):
     """Assign random colors to separate mesh islands"""
     bl_idname = 'vertexcolormaster.randomize_mesh_island_colors'
     bl_label = 'VCM Randomize Island Colors'
@@ -486,7 +487,7 @@ class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColors(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColorsPerChannel(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColorsPerChannel(Operator):
     """Assign random values per active channel to separate mesh islands"""
     bl_idname = 'vertexcolormaster.randomize_mesh_island_colors_per_channel'
     bl_label = 'VCM Randomize Island Colors Per Channel'
@@ -570,7 +571,7 @@ class VERTEXCOLORMASTER_OT_RandomizeMeshIslandColorsPerChannel(bpy.types.Operato
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_BlurChannel(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_BlurChannel(Operator):
     """Blur values of a particular channel"""
     bl_idname = 'vertexcolormaster.blur_channel'
     bl_label = 'VCM Blur Channel'
@@ -639,7 +640,7 @@ class VERTEXCOLORMASTER_OT_BlurChannel(bpy.types.Operator):
 
 
 
-class VERTEXCOLORMASTER_OT_NormalsToColor(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_NormalsToColor(Operator):
     """Copy Custom Normals to vertex color channel"""
     bl_idname = 'vertexcolormaster.normals_to_color'
     bl_label = 'VCM Normals to Color'
@@ -665,7 +666,7 @@ class VERTEXCOLORMASTER_OT_NormalsToColor(bpy.types.Operator):
 
 
 
-class VERTEXCOLORMASTER_OT_CopyChannel(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_CopyChannel(Operator):
     """Copy or swap channel data from one channel to another"""
     bl_idname = 'vertexcolormaster.copy_channel'
     bl_label = 'VCM Copy channel data'
@@ -704,7 +705,7 @@ class VERTEXCOLORMASTER_OT_CopyChannel(bpy.types.Operator):
 
 
 
-class VERTEXCOLORMASTER_OT_Fill(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_Fill(Operator):
     """Fill the active vertex color channel(s)"""
     bl_idname = 'vertexcolormaster.fill'
     bl_label = 'VCM Fill'
@@ -766,7 +767,7 @@ class VERTEXCOLORMASTER_OT_Fill(bpy.types.Operator):
             row.prop(self, 'fill_color', text="")
 
 
-class VERTEXCOLORMASTER_OT_Invert(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_Invert(Operator):
     """Invert active vertex color channel(s)"""
     bl_idname = 'vertexcolormaster.invert'
     bl_label = 'VCM Invert'
@@ -789,7 +790,7 @@ class VERTEXCOLORMASTER_OT_Invert(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_Posterize(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_Posterize(Operator):
     """Posterize active vertex color channel(s)"""
     bl_idname = 'vertexcolormaster.posterize'
     bl_label = 'VCM Posterize'
@@ -823,7 +824,7 @@ class VERTEXCOLORMASTER_OT_Posterize(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_Remap(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_Remap(Operator):
     """Remap active vertex color channel(s)"""
     bl_idname = 'vertexcolormaster.remap'
     bl_label = 'VCM Remap'
@@ -905,7 +906,7 @@ class VERTEXCOLORMASTER_OT_Remap(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_EditBrushSettings(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_EditBrushSettings(Operator):
     """Set vertex paint brush settings"""
     bl_idname = 'vertexcolormaster.edit_brush_settings'
     bl_label = 'VCM Edit Brush Settings'
@@ -944,7 +945,7 @@ class VERTEXCOLORMASTER_OT_EditBrushSettings(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_QuickFill(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_QuickFill(Operator):
     """Quick fill vertex color RGB with current brush color. Can use selection mask"""
     bl_idname = 'vertexcolormaster.quick_fill'
     bl_label = 'VCM Fill Color'
@@ -973,7 +974,7 @@ class VERTEXCOLORMASTER_OT_QuickFill(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class VERTEXCOLORMASTER_OT_IsolateChannel(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_IsolateChannel(Operator):
     """Isolate a specific channel to paint in grayscale"""
     bl_idname = 'vertexcolormaster.isolate_channel'
     bl_label = 'VCM Isolate Channel'
@@ -1023,7 +1024,8 @@ class VERTEXCOLORMASTER_OT_IsolateChannel(bpy.types.Operator):
 
         return {'FINISHED'}
 
-class VERTEXCOLORMASTER_OT_ApplyIsolatedChannel(bpy.types.Operator):
+
+class VERTEXCOLORMASTER_OT_ApplyIsolatedChannel(Operator):
     """Apply isolated channel back to the vertex color layer it came from"""
     bl_idname = 'vertexcolormaster.apply_isolated'
     bl_label = "VCM Apply Isolated Channel"
@@ -1076,7 +1078,7 @@ class VERTEXCOLORMASTER_OT_ApplyIsolatedChannel(bpy.types.Operator):
         return {'FINISHED'}
 
 # This also supports value flipping, but otherwise can be# replaced in UI with paint.brush_colors_flip
-class VERTEXCOLORMASTER_OT_FlipBrushColors(bpy.types.Operator):
+class VERTEXCOLORMASTER_OT_FlipBrushColors(Operator):
     
     """Toggle foreground and background brush colors"""
     bl_idname = 'vertexcolormaster.brush_colors_flip'
@@ -1109,7 +1111,7 @@ class VERTEXCOLORMASTER_OT_FlipBrushColors(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class vcm_MossVertexColors(bpy.types.Operator):
+class vcm_MossVertexColors(Operator):
 
     bl_idname = "paint.mossvertexcolors"
     bl_label = "MossVertexColors"
@@ -1193,6 +1195,7 @@ class vcm_MossVertexColors(bpy.types.Operator):
 
         
         return {'FINISHED'}
+
 
 
 #Edgeware vertex colors
@@ -1337,7 +1340,7 @@ def applyVertexDirt(context,me, blur_iterations, blur_strength, clamp_dirt):
     return {'FINISHED'}
 
 
-class vcm_EdgeWare(bpy.types.Operator):
+class vcm_EdgeWare(Operator):
     bl_idname = "paint.edgeware"
     bl_label = "EdgeWareVertexColors"
     bl_options = {'REGISTER', 'UNDO'}

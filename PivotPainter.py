@@ -24,13 +24,13 @@ bl_info = {
     "category": "Unreal Tools",
     }
 
-import time, sys, math, ctypes, random, mathutils, bpy, os
+import time, sys, math,random, mathutils, bpy, os
+from mathutils import Vector
 import numpy as np
 from ctypes import POINTER, pointer, c_int, cast, c_float
 from bpy.types import Operator, Panel, PropertyGroup
 from bpy.props import BoolProperty, PointerProperty, IntProperty, StringProperty
-from math import floor, ceil, sqrt
-from time import sleep
+from math import floor, ceil
 import bmesh
 from bpy.props import PointerProperty
 
@@ -1024,9 +1024,6 @@ class PivotToVcol (bpy.types.Operator):
     
     
 
-    SCALE=45
-
-    SCALE_Z=80
 
 
 
@@ -1035,7 +1032,7 @@ class PivotToVcol (bpy.types.Operator):
         SceneScale = bpy.context.scene.unit_settings.scale_length * 10
         objs = [obj for obj in bpy.context.selected_objects if obj.type == 'MESH']
         generated_objs = []
-
+        activeobj=bpy.context.view_layer.objects.active
         #bpy.ops.object.select_all(action='DESELECT')
 
 
@@ -1056,11 +1053,11 @@ class PivotToVcol (bpy.types.Operator):
         # (this is multiplied by ten to correct for the scene scale which may require a different solution for adapting to different scene scales)
         
         if maxx < maxy:
-            self.SCALE = maxy / SceneScale
+            scale = maxy / SceneScale
         else:
-            self.SCALE = maxx / SceneScale
+            scale = maxx / SceneScale
 
-        self.SCALE_Z = maxz / SceneScale
+        Scale_Z = maxz / SceneScale
         
 
         # for objects in the selected objects set color dependent on the object location from world origin
@@ -1068,7 +1065,7 @@ class PivotToVcol (bpy.types.Operator):
 
         for obj in bpy.context.selected_objects:
             loc= obj.location
-            color = (((loc.x/self.SCALE)+1)/2), (((loc.y/self.SCALE)+1)/2), (((loc.z/self.SCALE_Z)+1)/2), random.uniform(0.0,0.1)
+            color = (((loc.x/scale)+1)/2), (((loc.y/scale)+1)/2), (((loc.z/Scale_Z)+1)/2), random.uniform(0.0,0.1)
             
             #creates a Bmesh from the current object and creates a new vertex color layer called col
             bm=bmesh.new()

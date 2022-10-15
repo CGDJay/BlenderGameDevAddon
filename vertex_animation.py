@@ -24,17 +24,16 @@
 
 import bpy
 import bmesh
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, PointerProperty
 from bpy.types import Operator, Panel, PropertyGroup
 
-from bpy.props import PointerProperty
 
 AddonName = __package__
 
 class VAT_Properties(PropertyGroup):
     
     
-    output_dir: bpy.props.StringProperty (name = "Directory", subtype='DIR_PATH'  )
+    output_dir: StringProperty (name = "Directory", subtype='DIR_PATH'  )
 
 
 

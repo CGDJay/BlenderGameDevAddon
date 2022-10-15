@@ -1,9 +1,7 @@
 
 import bpy
 
-from bpy.props import StringProperty, IntProperty, BoolProperty
-
-from bpy.props import PointerProperty
+from bpy.props import StringProperty, PointerProperty
 
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
@@ -206,6 +204,7 @@ class SuffixOne(Operator):
 
     bl_idname = "suffix.one"
     bl_label = "SuffixOne"
+
 
     @classmethod
     def poll (cls, context):

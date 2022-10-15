@@ -120,9 +120,6 @@ class GameDev_LoadPBRMatPanel(Panel):
         row.operator ("gamedev.load_pbrmat", icon = "IMPORT", text="ImportMat")
 
 
-
-
-
 class GameDev_LoadPBRMat (Operator):
     bl_idname = "gamedev.load_pbrmat"
     bl_label = "LoadPBRMat"

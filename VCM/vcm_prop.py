@@ -18,13 +18,14 @@
 # <pep8 compliant>
 
 import bpy
+from bpy.types import PropertyGroup
 from bpy.props import *
 from mathutils import Color
 from .vcm_globals import *
 from .vcm_helpers import rgb_to_luminosity
 
 # VERTEXCOLORMASTER_Properties
-class VertexColorMasterProperties(bpy.types.PropertyGroup):
+class VertexColorMasterProperties(PropertyGroup):
 
     def update_active_channels(self, context):
         if self.use_grayscale or not self.match_brush_to_active_channels:
