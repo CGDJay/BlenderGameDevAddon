@@ -6,9 +6,7 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
 
 
 # Mesh Tools
-- hidden assist
-  - 3 button mouse enable in sculpt mode 
-  - auto enable default addons in blender for gamedev
+
 - Quick ops
   - quickly set origin point to selection
   - quickly create floater meshes ( currently requires custom vert group for mesh bounds)
@@ -20,11 +18,6 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
 
 - Quick suffix 
   - for quickly assigning predefined suffixes to any mesh
-
-
-- Generate Moss cap
-  - generates a cap mesh to work with a predifined shader to create a coat of moss cards
-
 
 - Pivot painter
   - record indevidual mesh pivot positions to either texture or vertex color
@@ -50,38 +43,6 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
 
 https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5-bb92-868b0097ccaf.mp4
 
-
-# To do
-  
-  # Complete
-  - [x] convert multiple custom UV atlas operator into single operator (reference the unwrap operator)
-  - [x] add import image as plane operator to TPT when no object is selected
-  - [x] Expose orientation and additional parameters for Custom export 
-  - [x] Exspose naming conventions for Load PBR Mat
-  - [x] Add presets to export
-  - [x] Restore selection type after context aware Mark UV seam
-  
-  # UV tools
-  - [ ] Fix Unwrap tool for used outside of UV sync=True
-  
-  # Moss Cap
-  - [ ] Add test for non manifold moss cap mesh (on hold as priority is low)
-  
-  # Quick Suffix
-  - [ ] Add Collection quick suffix 
-  
-  # Batch Asset Librbary
-  - [ ] update batch asset library to use the split fuction to get asset tags
-  
-  # Pivot Painter
-  - [ ] reduce the amount of available options on pivot painter to streamline the process
-  - [ ] Use active selection location instead of world center for pivot to vcol operation
-  
-  # Collision tools
-  - [ ] Create Auto UCX
-  - [ ] Find optimal UI for custom collision 
- 
-  
   
 # original scripts 
   - collision tools : https://github.com/greisane/gret
