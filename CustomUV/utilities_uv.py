@@ -628,31 +628,6 @@ def getSelectionFacesIslands(bm, uv_layers, selected_faces_loops):
 	return selected_faces_islands, selected_faces_loops
 
 
-'''
-def getSelectionLoopsIslands(bm, uv_layers, selected_loops):
-	# Select islands
-	bpy.ops.uv.select_linked()
-	disordered_loops_islands = {loop for face in bm.faces for loop in face.loops if loop[uv_layers].select and loop.edge.select}
-
-	selected_loops_islands = []
-
-	for loop in selected_loops:
-		if loop in disordered_loops_islands:
-			bpy.ops.uv.select_all(action='DESELECT')
-			loop[uv_layers].select = True
-			bpy.ops.uv.select_linked()
-
-			loops_island = {l for l in disordered_loops_islands if l[uv_layers].select}
-			disordered_loops_islands.difference_update(loops_island)
-
-			selected_loops_islands.append(loops_island)
-			if not disordered_loops_islands:
-				break
-
-	return selected_loops_islands
-'''
-
-
 def alignMinimalBounds(bm, uv_layers, selected_faces):
 	steps = 8
 	angle = math.pi / 4	# Starting Angle, half each step

@@ -21,10 +21,178 @@ import mathutils
 from mathutils import Vector
 import numpy as np
 import pyperclip
-from ..common import get_uv_editable_objects, check_version, get_island_info_from_bmesh
+
 from collections import defaultdict
 from itertools import chain
 from . import utilities_uv
+
+
+__DEBUG_MODE = False
+
+
+
+def check_version(major, minor, _):
+    """
+    Check blender version
+    """
+
+    if bpy.app.version[0] == major and bpy.app.version[1] == minor:
+        return 0
+    if bpy.app.version[0] > major:
+        return 1
+    if bpy.app.version[1] > minor:
+        return 1
+    return -1
+
+
+def get_object_select(obj):
+    if check_version(2, 80, 0) < 0:
+        return obj.select
+
+    return obj.select_get()
+
+
+def get_uv_editable_objects(context):
+    if check_version(2, 80, 0) < 0:
+        objs = [context.active_object]
+    else:
+        objs = [o for o in bpy.data.objects
+                if get_object_select(o) and o.type == 'MESH']
+        objs.append(context.active_object)
+
+    objs = list(set(objs))
+    return objs
+
+
+def get_island_info(obj, only_selected=True):
+    bm = bmesh.from_edit_mesh(obj.data)
+    if check_version(2, 73, 0) >= 0:
+        bm.faces.ensure_lookup_table()
+
+    return get_island_info_from_bmesh(bm, only_selected)
+
+
+def get_island_info_from_bmesh(bm, only_selected=True):
+    if not bm.loops.layers.uv:
+        return None
+    uv_layer = bm.loops.layers.uv.verify()
+
+    # create database
+    if only_selected:
+        selected_faces = [f for f in bm.faces if f.select]
+    else:
+        selected_faces = [f for f in bm.faces]
+
+    return get_island_info_from_faces(bm, selected_faces, uv_layer)
+
+
+def get_island_info_from_faces(bm, faces, uv_layer):
+    ftv, vtf = __create_vert_face_db(faces, uv_layer)
+
+    # Get island information
+    uv_island_lists = __get_island(bm, ftv, vtf)
+    island_info = __get_island_info(uv_layer, uv_island_lists)
+
+    return island_info
+
+
+def __create_vert_face_db(faces, uv_layer):
+    # create mesh database for all faces
+    face_to_verts = defaultdict(set)
+    vert_to_faces = defaultdict(set)
+    for f in faces:
+        for l in f.loops:
+            id_ = l[uv_layer].uv.to_tuple(5), l.vert.index
+            face_to_verts[f.index].add(id_)
+            vert_to_faces[id_].add(f.index)
+
+    return (face_to_verts, vert_to_faces)
+
+
+
+def __get_island(bm, face_to_verts, vert_to_faces):
+    """
+    Get island list
+    """
+
+    uv_island_lists = []
+    faces_left = set(face_to_verts.keys())
+    while faces_left:
+        current_island = []
+        face_idx = list(faces_left)[0]
+        __parse_island(bm, face_idx, faces_left, current_island,
+                        face_to_verts, vert_to_faces)
+        uv_island_lists.append(current_island)
+
+    return uv_island_lists
+
+
+def __get_island_info(uv_layer, islands):
+    """
+    get information about each island
+    """
+
+    island_info = []
+    for isl in islands:
+        info = {}
+        max_uv = Vector((-10000000.0, -10000000.0))
+        min_uv = Vector((10000000.0, 10000000.0))
+        ave_uv = Vector((0.0, 0.0))
+        num_uv = 0
+        for face in isl:
+            n = 0
+            a = Vector((0.0, 0.0))
+            ma = Vector((-10000000.0, -10000000.0))
+            mi = Vector((10000000.0, 10000000.0))
+            for l in face['face'].loops:
+                uv = l[uv_layer].uv
+                ma.x = max(uv.x, ma.x)
+                ma.y = max(uv.y, ma.y)
+                mi.x = min(uv.x, mi.x)
+                mi.y = min(uv.y, mi.y)
+                a = a + uv
+                n = n + 1
+            ave_uv = ave_uv + a
+            num_uv = num_uv + n
+            a = a / n
+            max_uv.x = max(ma.x, max_uv.x)
+            max_uv.y = max(ma.y, max_uv.y)
+            min_uv.x = min(mi.x, min_uv.x)
+            min_uv.y = min(mi.y, min_uv.y)
+            face['max_uv'] = ma
+            face['min_uv'] = mi
+            face['ave_uv'] = a
+        ave_uv = ave_uv / num_uv
+
+        info['center'] = ave_uv
+        info['size'] = max_uv - min_uv
+        info['num_uv'] = num_uv
+        info['group'] = -1
+        info['faces'] = isl
+        info['max'] = max_uv
+        info['min'] = min_uv
+
+        island_info.append(info)
+
+    return island_info
+
+
+def __parse_island(bm, face_idx, faces_left, island,
+                   face_to_verts, vert_to_faces):
+    """
+    Parse island
+    """
+
+    faces_to_parse = [face_idx]
+    while faces_to_parse:
+        fidx = faces_to_parse.pop(0)
+        if fidx in faces_left:
+            faces_left.remove(fidx)
+            island.append({'face': bm.faces[fidx]})
+            for v in face_to_verts[fidx]:
+                connected_faces = vert_to_faces[v]
+                for cf in connected_faces:
+                    faces_to_parse.append(cf)
 
 
 

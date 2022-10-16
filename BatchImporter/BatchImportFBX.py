@@ -108,6 +108,10 @@ class ImportButton(Operator):
             obj.asset_mark()
 
             obj.asset_data.tags.new(Size)
+
+
+
+        
                         
 
         Metrics = re.compile(r"(\d+)X(\d+)") # edit this string

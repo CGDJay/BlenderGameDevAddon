@@ -234,7 +234,7 @@ class GameDev_MossCap_OP_Create(Operator):
 
         # Get a list of selected objects, except non-mesh objects
         input_objects = [obj for obj in context.selected_objects if obj.type == 'MESH']
-        snow_list = []
+        moss_list = []
 
 
         # Start UI progress bar
@@ -275,6 +275,7 @@ class GameDev_MossCap_OP_Create(Operator):
             surface_area = area(MossCap)
             print (surface_area)
             moss = add_particles(context, surface_area, height, coverage, MossCap, ballobj)
+
             # Place inside collection
             context.view_layer.active_layer_collection = context.view_layer.layer_collection
             if "moss" not in context.scene.collection.children:
@@ -293,7 +294,7 @@ class GameDev_MossCap_OP_Create(Operator):
 
 
             # Add moss to list
-            snow_list.append(moss)
+            moss_list.append(moss)
 
 
 
@@ -303,13 +304,21 @@ class GameDev_MossCap_OP_Create(Operator):
 
 
         # Select created moss meshes
-        for s in snow_list:
-            s.select_set(True)
+        for m in moss_list:
+            m.select_set(True)
         
-        
+ 
 
 
         bpy.ops.object.voxel_remesh()
+        obj=m
+        mesh= obj.data
+        Moss=bmesh.new()
+        Moss.from_mesh(mesh)
+
+        for e in Moss.edges:
+            if e.is_manifold == False:
+                print ('is non manifold , run again')
 
         bpy.ops.object.quadriflow_remesh(use_mesh_symmetry=False, use_preserve_sharp=False, use_preserve_boundary=False, preserve_paint_mask=False, smooth_normals=False, mode='FACES', target_ratio=1.0, target_edge_length=0.1, target_faces=int(surface_area/10), mesh_area=- 1, seed=0)
         

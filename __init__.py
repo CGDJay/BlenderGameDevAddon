@@ -55,13 +55,13 @@ import importlib
 module_names = (
     "pref",
 
-    "AutoEnableAddon",
+    "HiddenAssist.AutoEnableAddon",
 
-    "QuickSuffix",
+    "QuickSuffix.QuickSuffix",
 
-    "PivotPainter",
+    "PivotPainter.PivotPainter",
     
-    "vertex_animation",
+    "VertexAnimation.vertex_animation",
 
     "QuickOps.QuickOps_pnl",
     "QuickOps.QuickOps_op",
@@ -72,9 +72,9 @@ module_names = (
 
     "MossCap.MossCap",
 
-    "TTP",
+    "TesselateTexturePlane.TTP",
 
-    "CollisionTools",
+    "CollisionTools.CollisionTools",
 
     "VCM.vcm_prop",
     "VCM.vcm_menus",
@@ -82,9 +82,9 @@ module_names = (
 
     "BatchImporter.BatchImportFBX",
 
-    "LoadPBRTexture",
+    "LoadPBRMat.LoadPBRTexture",
 
-    "CustomExport",
+    "CustomExport.CustomExport",
 
     
 
