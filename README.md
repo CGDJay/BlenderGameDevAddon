@@ -7,15 +7,6 @@ Some of the tools are adapted/ modified versions of excisting tools from public 
 
 # Mesh Tools
 
-- Quick ops
-  - quickly set origin point to selection
-  - quickly create floater meshes ( currently requires custom vert group for mesh bounds)
-  - quickly creat lattice
-  - quickly create warp (uses 3d cursor to place the warp points)
-  - reduce cylinder resolution
-  - quick resolve Ngon
-  - remove Subdiv support loops
-
 - Quick suffix 
   - for quickly assigning predefined suffixes to any mesh
 
