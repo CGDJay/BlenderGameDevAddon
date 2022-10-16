@@ -5,6 +5,9 @@ This addon consist of multiple tools developed to streamline the game developeme
 Some of the tools are adapted/ modified versions of excisting tools from public GNU license repositories
 
 
+# Update
+For early addopters who have noticed the now missing scripts these have now been retracted and will soon be available on Blender marketplace, I hope you are understanding that doing this will allow me to support the development and refinement of these and new tools in the future 
+
 # Mesh Tools
 
 - Quick suffix 
