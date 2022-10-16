@@ -14,6 +14,10 @@ from gpu_extras.batch import batch_for_shader
 
 SMALL_NUMBER = 1e-8
 
+AddonName = __package__
+
+AddonName=AddonName.replace('.CollisionTools','')
+
 def get_parent_name (self, object):
     if object.parent:
         name= object.name

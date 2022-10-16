@@ -6,6 +6,12 @@ from bpy.types import PropertyGroup, Panel, Operator,Menu
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
 
+
+
+AddonName = __package__
+
+AddonName=AddonName.replace('.LoadPBRMat','')
+
 class GameDev_LoadPBRMat_Prop(PropertyGroup):
     ImportDir: StringProperty(name="ImportDir",subtype='DIR_PATH')
     MatName: StringProperty(name="MatName",default='Mat1')

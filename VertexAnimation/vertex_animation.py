@@ -30,6 +30,9 @@ from bpy.types import Operator, Panel, PropertyGroup
 
 AddonName = __package__
 
+AddonName=AddonName.replace('.VertexAnimation','')
+
+
 class VAT_Properties(PropertyGroup):
     
     

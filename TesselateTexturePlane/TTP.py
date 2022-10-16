@@ -71,7 +71,9 @@ from bpy.types import (Operator,
 
 
 
+AddonName = __package__
 
+AddonName=AddonName.replace('.TesselateTexturePlane','')
 
 class TESS_props_group(PropertyGroup):
     '''Duplicate props of the operator to display in panel'''

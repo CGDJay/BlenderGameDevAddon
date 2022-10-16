@@ -35,6 +35,10 @@ import bmesh
 from bpy.props import PointerProperty
 
 AddonName = __package__
+
+
+AddonName=AddonName.replace('.PivotPainter','')
+
 class UE4_PivotPainterProperties(PropertyGroup):															# create property group for user options
     
     alpha_options = [

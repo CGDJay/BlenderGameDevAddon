@@ -8,6 +8,9 @@ from bl_ui.utils import PresetPanel
 from bpy.types import Panel, Menu , PropertyGroup , Operator
 AddonName = __package__
 
+AddonName=AddonName.replace('.QuickSuffix','')
+
+
 class QuickSuffix_Props_(PropertyGroup):
 
 

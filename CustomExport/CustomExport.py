@@ -5,6 +5,12 @@ from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
 from bpy.types import Panel, Menu , PropertyGroup , Operator
 
+
+
+AddonName = __package__
+
+AddonName=AddonName.replace('.CustomExport','')
+
 class GameDev_Export_Prop(PropertyGroup):
     ExportDir: StringProperty(name="ExportDir",subtype='DIR_PATH')
     TransformOld: FloatVectorProperty(name="TransformOld", default=(0,0,0))
