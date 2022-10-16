@@ -1,4 +1,4 @@
-# BlenderGameDevAddon
+# BlenderGameDevAddon (Free scripts)
 A Blender addon devised to assist in the production of game development
 
 This addon consist of multiple tools developed to streamline the game developement process. 
