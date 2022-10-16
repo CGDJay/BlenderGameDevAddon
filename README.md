@@ -87,14 +87,18 @@ https://user-images.githubusercontent.com/105077390/194727061-cd03f3ee-c65c-46f5
   - [ ] Fix Unwrap tool for used outside of UV sync=True
   
   # Moss Cap
-  - [ ] Add test for non manifold moss cap mesh
+  - [ ] Add test for non manifold moss cap mesh (on hold as priority is low)
+  
   # Quick Suffix
   - [ ] Add Collection quick suffix 
+  
   # Batch Asset Librbary
   - [ ] update batch asset library to use the split fuction to get asset tags
+  
   # Pivot Painter
   - [ ] reduce the amount of available options on pivot painter to streamline the process
   - [ ] Use active selection location instead of world center for pivot to vcol operation
+  
   # Collision tools
   - [ ] Create Auto UCX
   - [ ] Find optimal UI for custom collision 
