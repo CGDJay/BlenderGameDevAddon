@@ -24,9 +24,6 @@ For early addopters who have noticed the now missing scripts, these have now bee
 - Tex plane tesselation 
   - cut out alpha cards for foliage or any kind of asset witha single click 
 
-- Custom export 
-  - export selected mesh and children objects at world center and apply SM_ prefix (WIP UX)
-
 
 
 # Installation Guide
