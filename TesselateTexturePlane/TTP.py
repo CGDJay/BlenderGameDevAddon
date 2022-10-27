@@ -38,13 +38,34 @@ import bmesh
 from mathutils import Vector, Matrix
 from time import time
 from bpy.props import PointerProperty
+from pathlib import Path
 
+from . import auto_modules
 ## module auto-install
 ## module_name, package_name
 DEPENDENCIES = {
-    ('cv2', 'opencv-python'),# opencv-contrib-python
+    ( 'opencv-python','cv2'),# opencv-contrib-python
     ('triangle', 'triangle'),
 }
+
+
+
+
+modules_loc = Path(__file__).parents[1] / 'modules' # bpy.utils.user_resource('SCRIPTS', path='modules')
+error_message = f'''--- Cannot import modules (see console).
+Try following solutions:
+1. Try enabling addon after restarting blender as admin
+2. If error is still there, try deleteting currently installed modules:
+  - go to modules folder. Should be: {modules_loc}
+  - delete folders "triangle", "cv2", "triangle...dist-infos", "opencv...dist-infos"
+  - Try enabling the addon again to auto-install modules associated with this version of blender (preferably started as admin)
+---
+'''
+
+error = auto_modules.pip_install_and_import(DEPENDENCIES)
+
+
+
 
 import cv2
 import triangle # triangle doc >> https://rufat.be/triangle/API.html
